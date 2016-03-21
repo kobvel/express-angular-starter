@@ -15,6 +15,12 @@ module.exports = app => {
       resources: '/api/v1/users',
       permissions: ['post'],
     }],
+  }, {
+    roles: ['user'],
+    allows: [{
+      resources: '/api/v1/users/:userId',
+      permissions: ['put'],
+    }],
   }]);
 
   /**
@@ -97,6 +103,36 @@ module.exports = app => {
   app.post('/api/v1/users', app.acl.checkRoles, (req, res) => {
     delete req.body.role;
     app.services.users.create(req.body)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {put} /users Edit a user
+   * @apiGroup User
+   * @apiParam {String} name User name
+   * @apiParam {String} _id User id
+   * @apiParamExample {json} Input
+   *    {
+   *      "name": "John Connor",
+   *      "id": 1
+   *    }
+   * @apiSuccess {Number} id User id
+   * @apiParam {String} name User name
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "id": 1,
+   *      "name": "John Connor",
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.put('/api/v1/users/:userId', app.acl.checkRoles, (req, res) => {
+    delete req.body.role;
+    app.services.users.edit(req.params.userId, req.body, req.user)
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });

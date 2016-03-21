@@ -18,5 +18,11 @@ module.exports = app => {
     return Users.create(user);
   };
 
+  service.edit = (id, body, user) => {
+    const query = { where: { id } };
+
+    return Users.update(body, query);
+  };
+
   return service;
 };
