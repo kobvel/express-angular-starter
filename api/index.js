@@ -15,6 +15,7 @@ consign({
   .then('services')
   .then('routes')
   .then('config/boot.js')
+  .then('fixtures')
   .into(app);
 
 module.exports = app;
