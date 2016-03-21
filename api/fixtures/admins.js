@@ -9,7 +9,6 @@ module.exports = app => {
         email: 'admin@admin.com',
         role: 'admin',
       };
-      console.log(res.count);
       if (res.count === 0) {
         Users.create(user);
       }
