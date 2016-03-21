@@ -87,7 +87,7 @@ const lintOptionsServer = {
   env: {
     mocha: true,
     node:  true,
-    //es6:   true    
+    //es6:   true
   },
   global: ['app', 'expect', 'request', 'by', 'element', 'browser']
 };
@@ -182,9 +182,9 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
       baseDir: ['.tmp', 'client/web/app', 'client/web'],
       middleware: [
           modRewrite([
-              '!\\.\\w+$ /index.html [L]'
+              '^[^\\.]*$ /index.html [L]'
           ])
-      ],      
+      ],
       routes: {
         '/bower_components': 'client/web/bower_components'
       }
@@ -196,7 +196,7 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     'client/web/app/scripts/**/*.js',
     'client/web/app/images/**/*',
     'app/modules/**/*.js',
-    'app/modules/**/*.html',    
+    'app/modules/**/*.html',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
@@ -216,7 +216,7 @@ gulp.task('web:serve:dist', () => {
           modRewrite([
               '!\\.\\w+$ /index.html [L]'
           ])
-      ],      
+      ],
       baseDir: ['client/web/dist']
     }
   });
@@ -234,7 +234,7 @@ gulp.task('web:serve:test', () => {
           modRewrite([
               '!\\.\\w+$ /index.html [L]'
           ])
-      ],      
+      ],
       routes: {
         '/bower_components': 'client/web/bower_components'
       }
@@ -270,17 +270,17 @@ gulp.task('build', ['web:lint', 'angulartemplates', 'html', 'images', 'fonts', '
  *
  * API
  *
- * 
+ *
  */
 
 gulp.task('api:serve', ['api:lint'],() => {
-  gulpNodemon({ 
+  gulpNodemon({
     script: 'api/start.js',
   });
 });
 
 gulp.task('api:cluster', ['api:lint'],() => {
-  gulpNodemon({ 
+  gulpNodemon({
     script: 'api/start_clusters.js',
   });
 });
