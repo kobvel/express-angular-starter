@@ -18,7 +18,7 @@ module.exports = app => {
   }, {
     roles: ['user'],
     allows: [{
-      resources: '/api/v1/users/:userId',
+      resources: '/api/v1/users/me',
       permissions: ['put'],
     }],
   }]);
@@ -132,9 +132,9 @@ module.exports = app => {
    * @apiErrorExample {json} Register error
    *    HTTP/1.1 412 Precondition Failed
    */
-  app.put('/api/v1/users/:userId', app.acl.checkRoles, (req, res) => {
+  app.put('/api/v1/users/me', app.acl.checkRoles, (req, res) => {
     delete req.body.role;
-    app.services.users.edit(req.params.userId, req.body, req.user)
+    app.services.users.edit(req.body, req.user)
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });
