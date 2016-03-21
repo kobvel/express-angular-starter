@@ -14,8 +14,8 @@
     };
     return service;
 
-    function edit(user) {
-      return MEANRestangular.one('users', user.id).customPUT(user)
+    function edit(id, user) {
+      return MEANRestangular.one('users', id).customPUT(user)
         .then(updateCompleted)
         .catch(updateFailed);
 

@@ -114,7 +114,6 @@ module.exports = app => {
    * @apiGroup User
    * @apiParam {String} name User name
    * @apiParam {String} email User email
-   * @apiParam {String} id User id
    * @apiParamExample {json} Input
    *    {
    *      "name": "John Connor",

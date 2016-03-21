@@ -25,7 +25,6 @@
       function successMe(user) {
         vm.user.name = user.name;
         vm.user.email = user.email;
-        vm.user.id = user.id;
       }
 
       function failedMe(err) {
@@ -34,7 +33,7 @@
     }
 
     function edit() {
-      Users.edit(vm.user)
+      Users.edit(Authentication.user.id, vm.user)
         .then(successCreate)
         .catch(failedCreate);
 
