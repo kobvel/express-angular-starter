@@ -1,28 +1,33 @@
 describe('tasks service tests', () => {
-  var mockMEANRestangular;
-  var tasksObj;
+  var $http;
+  var $httpBackend;
+  var Tasks;
+  var MEANRestangular;
 
-  beforeEach(() => {
-    module(($provide) => {
-      $provide.service('Tasks', () => {
-        this.create = jasmine.createSpy('create');
-        this.getAll = jasmine.createSpy('getAll');
-      });
-    });
 
-    module('services');
-  });
+  // Then we can start by loading the main application module
+  beforeEach(module(ApplicationConfiguration.applicationModuleName));
 
-  beforeEach(inject((Tasks, MEANRestangular) => {
-    tasksObj = Tasks;
-    mockMEANRestangular = MEANRestangular;
+  // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
+  // This allows us to inject a service but then attach it to a variable
+  // with the same name as the service.
+  beforeEach(inject((_$http_, _$httpBackend_, _Tasks_, _MEANRestangular_) => {
+
+    // Point global variables to injected services
+    $http = _$http_;
+    $http.get = jasmine.createSpy('get');
+
+    $httpBackend = _$httpBackend_;
+
+    Tasks = _Tasks_;
+
   }));
 
-  it('test get all tasks api call', () => {
-    tasksObj.getAll();
 
-    expect(mockMEANRestangular.all).toHaveBeenCalled();
-    expect(mockMEANRestangular.all).toHaveBeenCalledWith('tasks');
-    expect(mockMEANRestangular.all('tasks').getList).toHaveBeenCalled();
+  it('test get all tasks api call', () => {
+    Tasks.getAll();
+
+    expect($http.get).toHaveBeenCalled();
+    expect($http.get).toHaveBeenCalledWith('https://localhost:3000/api/v1/tasks/', undefined);
   });
 });

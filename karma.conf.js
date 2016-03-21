@@ -5,7 +5,9 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: 'client/web/',
+
+    baseUrl: './',
 
 
     // frameworks to use
@@ -15,43 +17,41 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-
-      'client/web/bower_components/angular/angular.js',
-      'client/web/bower_components/angular-mocks/angular-mocks.js',
-
-      'client/web/bower_components/restangular/dist/restangular.js',
-      'client/web/bower_components/angular-ui-router/release/angular-ui-router.js',
-      'client/web/bower_components/angular-ui-utils/ui-utils.js',
-      'client/web/bower_components/angular-bootstrap/ui-bootstrap.js',
-      'client/web/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-      'client/web/bower_components/ngstorage/ngStorage.js',
-      'client/web/bower_components/angular-animate/angular-animate.js',
-      'client/web/bower_components/angular-loading-bar/build/loading-bar.js',
-
-
-
-      'client/web/app/modules/core/main/config.js',
-      'client/web/app/modules/core/main/init.js',
-      'client/web/app/modules/core/main/angular-config.js',
-      'client/web/app/modules/core/main/angular-run.js',
-      'client/web/app/modules/core/core.client.module.js',
-
-      'client/web/app/modules/*/*.js',
-      'client/web/app/modules/**/*.js',
-      'client/web/app/modules/**/tests/unit/*.js'
+      // libs
+      'bower_components/jquery/dist/jquery.js',
+      'bower_components/lodash/lodash.js',
+      'bower_components/angular/angular.js',
+      'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/restangular/dist/restangular.js',
+      'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/angular-ui-utils/ui-utils.js',
+      'bower_components/angular-bootstrap/ui-bootstrap.js',
+      'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'bower_components/ngstorage/ngStorage.js',
+      'bower_components/angular-animate/angular-animate.js',
+      'bower_components/angular-loading-bar/build/loading-bar.js',
+      // app
+      'app/modules/core/main/config.js',
+      'app/modules/core/main/init.js',
+      'app/modules/core/main/angular-config.js',
+      'app/modules/core/main/angular-run.js',
+      'app/modules/core/core.client.module.js',
+      'app/modules/*/*.js',
+      'app/modules/**/*.js',
+      'app/modules/**/tests/unit/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-      'client/web/app/modules/**/tests/e2e/*.js'
+      'app/modules/**/tests/e2e/*.js'
     ],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'client/web/app/modules/**/test/unit/*.js': ['babel']
+      'app/modules/**/*.js': ['babel']
     },
 
 
