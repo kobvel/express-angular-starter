@@ -10,11 +10,28 @@
   function EditUserController(Users, Alert, Authentication) {
     var vm = this;
     vm.user = {};
-    vm.user.name = Authentication.user.name;
-    vm.user.id = Authentication.user.id;
 
     console.log(vm.user);
     vm.edit = edit;
+    vm.init = init;
+
+    vm.init();
+
+    function init() {
+      Users.me()
+        .then(successMe)
+        .catch(failedMe);
+
+      function successMe(user) {
+        vm.user.name = user.name;
+        vm.user.email = user.email;
+        vm.user.id = user.id;
+      }
+
+      function failedMe(err) {
+        Alert.display('Error', err);
+      }
+    }
 
     function edit() {
       Users.edit(vm.user)

@@ -113,10 +113,12 @@ module.exports = app => {
    * @api {put} /users Edit a user
    * @apiGroup User
    * @apiParam {String} name User name
-   * @apiParam {String} _id User id
+   * @apiParam {String} email User email
+   * @apiParam {String} id User id
    * @apiParamExample {json} Input
    *    {
    *      "name": "John Connor",
+   *      "email": "john@connor.net",
    *      "id": 1
    *    }
    * @apiSuccess {Number} id User id
@@ -125,7 +127,8 @@ module.exports = app => {
    *    HTTP/1.1 200 OK
    *    {
    *      "id": 1,
-   *      "name": "John Connor",
+   *      "email": "john@connor.net",
+   *      "name": "John Connor"
    *    }
    * @apiErrorExample {json} Register error
    *    HTTP/1.1 412 Precondition Failed

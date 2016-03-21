@@ -9,12 +9,12 @@
 
   function Users(MEANRestangular) {
     var service = {
-      edit: edit
+      edit: edit,
+      me: me,
     };
     return service;
 
     function edit(user) {
-      console.log('edit ',user);
       return MEANRestangular.one('users', user.id).customPUT(user)
         .then(updateCompleted)
         .catch(updateFailed);
@@ -29,5 +29,19 @@
       }
     }
 
+    function me() {
+      return MEANRestangular.one('users/me').get()
+        .then(updateCompleted)
+        .catch(updateFailed);
+
+      function updateCompleted(response) {
+        return response;
+      }
+
+      function updateFailed(err) {
+        console.log('Get user Failed', err);
+        throw err.data;
+      }
+    }
   }
 }());
