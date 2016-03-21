@@ -1,5 +1,5 @@
 {
-  "name": "homeswitch",
+  "name": "mean",
   "private": true,
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
@@ -25,6 +25,10 @@
   },
   "devDependencies": {
     "chai": "~3.4.2",
-    "mocha": "~2.3.4"
+    "mocha": "~2.3.4",
+    "angular-mocks": "^1.5.2"
+  },
+  "resolutions": {
+    "angular": "^1.5"
   }
 }
