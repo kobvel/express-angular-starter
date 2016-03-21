@@ -198,7 +198,7 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     'client/web/app/modules/**/*.js',
     'client/web/app/modules/**/*.html',
     '.tmp/fonts/**/*'
-  ]).on('change', reload);
+  ]).on('change', () => gulp.start('web:lint'), reload);
 
   gulp.watch('client/web/app/styles/**/*.scss', ['styles']);
   gulp.watch('client/web/app/fonts/**/*', ['fonts']);

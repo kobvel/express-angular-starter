@@ -18,6 +18,12 @@
       abstract: false,
       templateUrl: prefix + 'password-reset.template.html',
       controller: 'PasswordResetController as prc',
+    })
+    .state('user-edit', {
+      url: '/user/edit',
+      abstract: false,
+      templateUrl: prefix + 'user-edit.template.html',
+      controller: 'EditUserController as uec',
     });
   }
 }());
