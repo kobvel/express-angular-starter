@@ -195,8 +195,8 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     'client/web/app/*.html',
     'client/web/app/scripts/**/*.js',
     'client/web/app/images/**/*',
-    'app/modules/**/*.js',
-    'app/modules/**/*.html',
+    'client/web/app/modules/**/*.js',
+    'client/web/app/modules/**/*.html',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
