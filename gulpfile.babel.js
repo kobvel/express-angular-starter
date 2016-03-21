@@ -9,6 +9,7 @@ import mocha from 'gulp-mocha';
 import {stream as wiredep} from 'wiredep';
 import modRewrite  from 'connect-modrewrite';
 import childProcess from 'child_process';
+import karma from 'karma';
 
 
 const $ = gulpLoadPlugins();
@@ -243,6 +244,14 @@ gulp.task('web:serve:test', () => {
 
   gulp.watch('client/web/test/spec/**/*.js').on('change', reload);
   gulp.watch('client/web/test/spec/**/*.js', ['lint:test']);
+});
+
+// Run karma tests
+gulp.task('web:test:karma', (done) => {
+  new karma.Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
 });
 
 // inject bower components

@@ -5,9 +5,9 @@
       .module('core')
       .factory('Tasks', Tasks);
 
-  Tasks.$inject = ['MEANRestangular'];
+  Tasks.$inject = ['$http', 'MEANRestangular'];
 
-  function Tasks(MEANRestangular) {
+  function Tasks($http, MEANRestangular) {
     var service = {
       create: create,
       getAll: getAll,
@@ -18,8 +18,12 @@
       return MEANRestangular.all('tasks').post(task);
     }
 
-    function getAll() {
-      return MEANRestangular.all('tasks').getList();
+    /**
+     * Get all tasks using $http call, replace by to use restangular
+     * return MEANRestangular.all('tasks').getList();
+     */
+    function getAll(config) {
+      return $http.get('https://localhost:3000/api/v1/tasks/', config);
     }
   }
 }());

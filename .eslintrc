@@ -18,7 +18,9 @@
     request: true,
     by: true,
     element: true,
-    browser: true
+    browser: true,
+    jasmine: true,
+    inject: true
   },
   "rules": {
     "semi" : [2, "always"],
