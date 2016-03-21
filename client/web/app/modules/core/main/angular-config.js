@@ -11,7 +11,7 @@
   function AngularConfiguration($locationProvider, $httpProvider) {
     $locationProvider.html5Mode({
       enabled: true,
-      requireBase: false
+      requireBase: false,
     });
 
     $httpProvider.interceptors.push('AuthInterceptor');
