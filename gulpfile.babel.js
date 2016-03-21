@@ -87,7 +87,7 @@ const lintOptionsServer = {
   env: {
     mocha: true,
     node:  true,
-    //es6:   true    
+    //es6:   true
   },
   global: ['app', 'expect', 'request', 'by', 'element', 'browser']
 };
@@ -179,12 +179,12 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     port: 9000,
     https: true,
     server: {
-      baseDir: ['.tmp', 'client/web/app'],
+      baseDir: ['.tmp', 'client/web/app', 'client/web'],
       middleware: [
           modRewrite([
-              '!\\.\\w+$ /index.html [L]'
+              '^[^\\.]*$ /index.html [L]'
           ])
-      ],      
+      ],
       routes: {
         '/bower_components': 'client/web/bower_components'
       }
@@ -195,8 +195,8 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     'client/web/app/*.html',
     'client/web/app/scripts/**/*.js',
     'client/web/app/images/**/*',
-    'app/modules/**/*.js',
-    'app/modules/**/*.html',    
+    'client/web/app/modules/**/*.js',
+    'client/web/app/modules/**/*.html',
     '.tmp/fonts/**/*'
   ]).on('change', () => gulp.start('web:lint'), reload);
 
@@ -216,7 +216,7 @@ gulp.task('web:serve:dist', () => {
           modRewrite([
               '!\\.\\w+$ /index.html [L]'
           ])
-      ],      
+      ],
       baseDir: ['client/web/dist']
     }
   });
@@ -234,7 +234,7 @@ gulp.task('web:serve:test', () => {
           modRewrite([
               '!\\.\\w+$ /index.html [L]'
           ])
-      ],      
+      ],
       routes: {
         '/bower_components': 'client/web/bower_components'
       }
@@ -261,7 +261,7 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('client/web/app'));
 });
 
-gulp.task('build', ['lint', 'angulartemplates', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['web:lint', 'angulartemplates', 'html', 'images', 'fonts', 'extras'], () => {
   return gulp.src('client/web/dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
@@ -270,17 +270,17 @@ gulp.task('build', ['lint', 'angulartemplates', 'html', 'images', 'fonts', 'extr
  *
  * API
  *
- * 
+ *
  */
 
 gulp.task('api:serve', ['api:lint'],() => {
-  gulpNodemon({ 
+  gulpNodemon({
     script: 'api/start.js',
   });
 });
 
 gulp.task('api:cluster', ['api:lint'],() => {
-  gulpNodemon({ 
+  gulpNodemon({
     script: 'api/start_clusters.js',
   });
 });

@@ -1,4 +1,4 @@
-import logger from './logger.js';
+import logger from '../logger.js';
 
 module.exports = {
   database: 'mean_relational_prod',
