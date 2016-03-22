@@ -11,18 +11,24 @@ module.exports = app => {
 
     Users.findOne({ where: { email } })
       .then(user => {
-        if (Users.isPassword(user.password, password) && user.emailValidate) {
-          const payload = { id: user.id };
-          deferred.resolve({
-            user: {
-              id: user.id,
-              name: user.name,
-            },
-            token: jwt.encode(payload, cfg.jwtSecret),
-          });
+        if (Users.isPassword(user.password, password)) {
+          if (user.emailValidate) {
+            const payload = { id: user.id };
+            deferred.resolve({
+              user: {
+                id: user.id,
+                name: user.name,
+              },
+              token: jwt.encode(payload, cfg.jwtSecret),
+            });
+          } else {
+            deferred.reject({
+              message: 'Email Not Validated',
+            });
+          }
         } else {
           deferred.reject({
-            message: 'Invalid Password or Email Not Validated',
+            message: 'Invalid Password',
           });
         }
       })
