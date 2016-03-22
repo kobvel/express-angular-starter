@@ -11,7 +11,7 @@ module.exports = app => {
 
     Users.findOne({ where: { email } })
       .then(user => {
-        if (Users.isPassword(user.password, password)) {
+        if (Users.isPassword(user.password, password) && user.emailValidate) {
           const payload = { id: user.id };
           deferred.resolve({
             user: {
@@ -22,7 +22,7 @@ module.exports = app => {
           });
         } else {
           deferred.reject({
-            message: 'Invalid Password',
+            message: 'Invalid Password or Email Not Validated',
           });
         }
       })
