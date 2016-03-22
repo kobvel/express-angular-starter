@@ -7,13 +7,17 @@ import browserSync from 'browser-sync';
 import del from 'del';
 import mocha from 'gulp-mocha';
 import {stream as wiredep} from 'wiredep';
+import runSequence from 'run-sequence';
 import modRewrite  from 'connect-modrewrite';
 import childProcess from 'child_process';
 import karma from 'karma';
+import gulpProtractor from 'gulp-protractor';
 
-
-const $ = gulpLoadPlugins();
+const protractor = gulpProtractor.protractor;
+const webdriver_update = gulpProtractor.webdriver_update;
+const webdriver_standalone = gulpProtractor.webdriver_standalone;
 const reload = browserSync.reload;
+const $ = gulpLoadPlugins();
 
 gulp.task('styles', () => {
   return gulp.src('client/web/app/styles/*.scss')
@@ -253,6 +257,40 @@ gulp.task('web:test:karma', (done) => {
     singleRun: true
   }, done).start();
 });
+
+gulp.task('web:test:e2e', (done) => {
+  runSequence('env:test', 'protractor', done);
+});
+
+gulp.task('env:test', () => {
+  //process.env.NODE_ENV = 'test';
+});
+
+// Protractor test runner task
+gulp.task('protractor', ['webdriver_update'], () => {
+  gulp.src([])
+    .pipe(protractor({
+      configFile: __dirname + '/protractor.conf.js'
+    }))
+    .on('end', () => {
+      console.log('E2E Testing complete');
+      // exit with success.
+      process.exit(0);
+    })
+    .on('error', (err) => {
+      console.log('E2E Tests failed');
+      process.exit(1);
+    });
+});
+
+// Downloads the selenium webdriver
+gulp.task('webdriver_update', webdriver_update);
+
+
+// Start the standalone selenium server
+// NOTE: This is not needed if you reference the
+// seleniumServerJar in your protractor.conf.js
+gulp.task('webdriver_standalone', webdriver_standalone);
 
 // inject bower components
 gulp.task('wiredep', () => {

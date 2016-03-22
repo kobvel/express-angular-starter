@@ -85,6 +85,7 @@
     "gulp-mocha": "^2.2.0",
     "gulp-nodemon": "^2.0.6",
     "gulp-plumber": "^1.0.1",
+    "gulp-protractor": "^2.2.0",
     "gulp-sass": "^2.0.0",
     "gulp-size": "^1.2.1",
     "gulp-sourcemaps": "^1.5.0",
@@ -103,6 +104,7 @@
     "nodemon": "^1.8.1",
     "opn": "^1.0.1",
     "phantomjs-prebuilt": "^2.1.6",
+    "run-sequence": "^1.1.5",
     "supertest": "^1.2.0",
     "wiredep": "^2.2.2"
   },
