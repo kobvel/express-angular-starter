@@ -8,6 +8,7 @@ module.exports = app => {
         password: 'admin',
         email: 'admin@admin.com',
         role: 'admin',
+        emailValidate: 1,
       };
       if (res.count === 0) {
         Users.create(user);
