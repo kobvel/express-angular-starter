@@ -7,7 +7,7 @@
 
   ValidateUserController.$inject = ['$state', '$timeout', 'Users', 'Alert', 'Authentication'];
 
-  function ValidateUserController($state, $timeout,Users, Alert, Authentication) {
+  function ValidateUserController($state, $timeout, Users, Alert, Authentication) {
     var vm = this;
     vm.init = init;
     vm.messagge = 'Su email se está validando...';
@@ -19,14 +19,14 @@
         .then(successValidate)
         .catch(failedValidate);
 
-      function successMe(user) {
+      function successValidate(user) {
         vm.messagge = 'Email validado. Redireccionando a la home...';
-        $timeout(function(){
+        $timeout(() => {
           $state.go('home');
         }, 5000);
       }
 
-      function failedMe(err) {
+      function failedValidate(err) {
         Alert.display('Error', err);
       }
     }

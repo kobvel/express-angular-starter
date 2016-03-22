@@ -27,7 +27,7 @@ module.exports = app => {
 
   service.validateEmail = (id) => {
     const query = { where: { id } };
-    const value = { emailValidte: 1 }
+    const value = { emailValidate: 1 };
     return Users.update(value, query);
   };
 
