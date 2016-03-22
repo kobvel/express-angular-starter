@@ -25,5 +25,11 @@ module.exports = app => {
     return Users.update(body, query);
   };
 
+  service.validateEmail = (id) => {
+    const query = { where: { id } };
+    const value = { emailValidate: 1 };
+    return Users.update(value, query);
+  };
+
   return service;
 };

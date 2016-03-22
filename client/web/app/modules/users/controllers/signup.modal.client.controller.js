@@ -62,36 +62,8 @@
         .catch(signupFailed);
 
       function signupCompleted(userParam) {
-        // Do automatic login
-        var user = {
-          email: vm.credentials.email,
-          password: vm.credentials.password,
-        };
-
         // Success message
-        vm.messages.success = 'Account created. Automatic login into your account';
-
-        // Try to login new user
-        Authentication.login(user)
-          .then(loginCompleted)
-          .catch(loginFailed);
-
-        // If login failed alert an error
-        function loginFailed(err) {
-          var message = '';
-          message += 'An error occurred when try to login ';
-          message += 'into your account, please try manually';
-
-          Alert
-            .display('Error', message)
-            .result
-            .then(AuthenticationModal.openLogin)
-            .catch(AuthenticationModal.openLogin);
-        }
-
-        // When login completed close signup modal
-        function loginCompleted() {
-        }
+        vm.messages.success = 'Account created. Please check your email and validate.';
       }
 
       // When signup fail alert errros

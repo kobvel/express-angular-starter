@@ -16,4 +16,11 @@ module.exports = {
   },
   jwtSecret: 'Mean-relational-AP1',
   jwtSession: { session: false },
+  emailService: 'Gmail',
+  auth: {
+    user: '',
+    pass: '',
+  },
+  urlBaseClient: 'https://localhost:9000',
+  urlBaseApi: 'https://localhost:3000',
 };

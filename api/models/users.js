@@ -37,6 +37,11 @@ module.exports = (sequelize, DataType) => {
         notEmpty: true,
       },
     },
+    emailValidate: {
+      type: DataType.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   }, {
     hooks: {
       beforeCreate: user => {

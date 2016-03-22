@@ -14,6 +14,10 @@ module.exports = app => {
     allows: [{
       resources: '/api/v1/users',
       permissions: ['post'],
+    },
+    {
+      resources: '/api/v1/users/validate/:id',
+      permissions: ['get'],
     }],
   }, {
     roles: ['user'],
@@ -103,7 +107,10 @@ module.exports = app => {
   app.post('/api/v1/users', app.acl.checkRoles, (req, res) => {
     delete req.body.role;
     app.services.users.create(req.body)
-      .then(result => res.json(result))
+      .then(result => {
+        app.services.email.sendValidateEmail(req.body.email, result.dataValues.id);
+        res.json(result);
+      })
       .catch(error => {
         res.status(412).json({ msg: error.message });
       });
@@ -135,6 +142,22 @@ module.exports = app => {
   app.put('/api/v1/users/me', app.acl.checkRoles, (req, res) => {
     delete req.body.role;
     app.services.users.edit(req.body, req.user)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {get} /users/validate/:id Validate user email
+   * @apiGroup User
+   * @apiParam {Number} id User id
+   * @apiSuccess {Number} [1] if is OK
+   * @apiErrorExample {json} Find error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.get('/api/v1/users/validate/:id', app.acl.checkRoles, (req, res) => {
+    app.services.users.validateEmail(req.params.id)
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });
