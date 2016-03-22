@@ -107,7 +107,10 @@ module.exports = app => {
   app.post('/api/v1/users', app.acl.checkRoles, (req, res) => {
     delete req.body.role;
     app.services.users.create(req.body)
-      .then(result => res.json(result))
+      .then(result => {
+        app.services.email.sendValidateEmail(req.body.email, result.dataValues.id);
+        res.json(result);
+      })
       .catch(error => {
         res.status(412).json({ msg: error.message });
       });

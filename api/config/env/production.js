@@ -21,4 +21,6 @@ module.exports = {
     user: '',
     pass: '',
   },
+  urlBaseClient: '',
+  urlBaseApi: '',
 };

@@ -8,6 +8,7 @@ describe('Routes: Token', () => {
           name: 'John',
           email: 'john@mail.net',
           password: '12345',
+          emailValidate: 1,
         }))
         .then(user => {
           done();

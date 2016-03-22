@@ -21,4 +21,6 @@ module.exports = {
     user: '',
     pass: '',
   },
+  urlBaseClient: 'https://localhost:9000',
+  urlBaseApi: 'https://localhost:3000',
 };

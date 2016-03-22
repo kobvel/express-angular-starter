@@ -8,13 +8,7 @@ module.exports = app => {
     auth: config.auth,
   });
 
-  service.sendEmail = (email, subject, content) => {
-    const mailOptions = {
-      to: email,
-      subject,
-      html: '<b>' + content + '</b>',
-    };
-
+  function sendEmail(mailOptions) {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
@@ -22,9 +16,19 @@ module.exports = app => {
         console.log('Enviado: ' + info.response);
       }
     });
-  };
+  }
 
-  // service.sendEmail('sergio.baldani@gmail.com', '1111', '2222');
+  service.sendValidateEmail = (email, id) => {
+    const content = 'Please enter <a href=\"' + config.urlBaseClient + '/user/validate/' + id +
+    '\"> here </a>';
+    const subject = 'Validate Email';
+    const mailOptions = {
+      to: email,
+      subject,
+      html: '<b>' + content + '</b>',
+    };
+    sendEmail(mailOptions);
+  };
 
   return service;
 };
