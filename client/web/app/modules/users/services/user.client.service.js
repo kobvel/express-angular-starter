@@ -11,6 +11,7 @@
     var service = {
       edit: edit,
       me: me,
+      validate: validate,
     };
     return service;
 
@@ -39,6 +40,21 @@
       }
 
       function updateFailed(err) {
+        console.log('Get user Failed', err);
+        throw err.data;
+      }
+    }
+
+    function validate(id) {
+      return MEANRestangular.one('users/validate', id).get()
+        .then(validateCompleted)
+        .catch(validateFailed);
+
+      function validateCompleted(response) {
+        return response;
+      }
+
+      function validateFailed(err) {
         console.log('Get user Failed', err);
         throw err.data;
       }

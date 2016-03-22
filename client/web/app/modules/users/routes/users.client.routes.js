@@ -24,6 +24,12 @@
       abstract: false,
       templateUrl: prefix + 'user-edit.template.html',
       controller: 'EditUserController as uec',
+    })
+    .state('user-validate', {
+      url: '/user/validate/:id',
+      abstract: false,
+      templateUrl: prefix + 'user-validate.template.html',
+      controller: 'ValidateUserController as vuc',
     });
   }
 }());

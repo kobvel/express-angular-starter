@@ -11,7 +11,6 @@
     var vm = this;
     vm.user = {};
 
-    console.log(vm.user);
     vm.edit = edit;
     vm.init = init;
 
