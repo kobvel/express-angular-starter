@@ -42,6 +42,14 @@ module.exports = (sequelize, DataType) => {
       allowNull: false,
       defaultValue: false,
     },
+    tokenValidate: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   }, {
     hooks: {
       beforeCreate: user => {
