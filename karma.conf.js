@@ -38,7 +38,7 @@ module.exports = function(config) {
       'app/modules/core/core.client.module.js',
       'app/modules/*/*.js',
       'app/modules/**/*.js',
-      'app/modules/**/tests/unit/*.js'
+      'app/modules/**/tests/unit/*.unit.test.js'
     ],
 
 

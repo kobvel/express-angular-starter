@@ -2,10 +2,10 @@
 
 // Protractor configuration
 var config = {
-  specs: ['client/web/app/modules/*/tests/e2e/*.js'],
+  specs: ['client/web/app/modules/*/tests/e2e/*.e2e.test.js'],
   allScriptsTimeout: 20000,
   params: {
-    baseUrl: 'http://localhost:9000'
+    baseUrl: 'https://localhost:9000'
   }
 };
 
