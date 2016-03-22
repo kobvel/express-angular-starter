@@ -17,7 +17,7 @@ module.exports = app => {
   };
 
   service.create = (user) => {
-    user.tokenValidate = bcrypt.genSaltSync().replace('/', '-');
+    user.tokenValidate = bcrypt.genSaltSync().replace(/\//g, '-');
     return Users.create(user);
   };
 
