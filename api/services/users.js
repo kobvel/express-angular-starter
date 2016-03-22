@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 module.exports = app => {
   const Users = app.db.models.Users;
   const service = {};
@@ -15,6 +17,7 @@ module.exports = app => {
   };
 
   service.create = (user) => {
+    user.tokenValidate = bcrypt.genSaltSync().replace(/\//g, '-');
     return Users.create(user);
   };
 
@@ -25,8 +28,8 @@ module.exports = app => {
     return Users.update(body, query);
   };
 
-  service.validateEmail = (id) => {
-    const query = { where: { id } };
+  service.validateEmail = (token) => {
+    const query = { where: { tokenValidate: token } };
     const value = { emailValidate: 1 };
     return Users.update(value, query);
   };

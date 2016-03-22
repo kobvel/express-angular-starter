@@ -15,7 +15,7 @@
     vm.init();
 
     function init() {
-      Users.validate($state.params.id)
+      Users.validate($state.params.token)
         .then(successValidate)
         .catch(failedValidate);
 

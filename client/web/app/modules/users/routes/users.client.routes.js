@@ -26,7 +26,7 @@
       controller: 'EditUserController as uec',
     })
     .state('user-validate', {
-      url: '/user/validate/:id',
+      url: '/user/validate/:token',
       abstract: false,
       templateUrl: prefix + 'user-validate.template.html',
       controller: 'ValidateUserController as vuc',
