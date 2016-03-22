@@ -45,10 +45,7 @@ module.exports = (sequelize, DataType) => {
     tokenValidate: {
       type: DataType.STRING,
       unique: true,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      defaultValue: '',
     },
   }, {
     hooks: {

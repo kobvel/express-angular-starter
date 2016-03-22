@@ -18,8 +18,8 @@ module.exports = app => {
     });
   }
 
-  service.sendValidateEmail = (email, id) => {
-    const content = 'Please enter <a href=\"' + config.urlBaseClient + '/user/validate/' + id +
+  service.sendValidateEmail = (email, token) => {
+    const content = 'Please enter <a href=\"' + config.urlBaseClient + '/user/validate/' + token +
     '\"> here </a>';
     const subject = 'Validate Email';
     const mailOptions = {
