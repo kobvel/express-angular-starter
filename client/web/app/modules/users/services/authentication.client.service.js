@@ -115,7 +115,7 @@
      * param credentials : object {email: example@domain.name}
      */
     function forgot(credentials) {
-      return MEANRestangular.one('auth').post('forgot', credentials)
+      return MEANRestangular.one('users').post('forgot', credentials)
         .then(forgotCompleted)
         .catch(forgotFailed);
 
@@ -134,7 +134,7 @@
      * param credentials : object {password: password}
      */
     function reset(paramToken, credentials) {
-      return MEANRestangular.one('auth', 'reset').post(paramToken, credentials)
+      return MEANRestangular.one('users/reset', 'password').post(paramToken, credentials)
         .then(resetCompleted)
         .catch(resetFailed);
 
@@ -152,7 +152,7 @@
      * param token: token to validate
      */
     function token(paramToken) {
-      return MEANRestangular.one('auth', 'reset').customGET(paramToken)
+      return MEANRestangular.one('users/reset', 'validate').customGET(paramToken)
         .then(validateCompleted)
         .catch(validateFailed);
 

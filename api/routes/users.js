@@ -16,7 +16,23 @@ module.exports = app => {
       permissions: ['post'],
     },
     {
+      resources: '/api/v1/users/forgot',
+      permissions: ['post'],
+    },
+    {
       resources: '/api/v1/users/validate/:token',
+      permissions: ['get'],
+    },
+    {
+      resources: '/api/v1/users/reset/validate/:token',
+      permissions: ['get'],
+    },
+    {
+      resources: '/api/v1/users/reset/password/:token',
+      permissions: ['post'],
+    },
+    {
+      resources: '/api/v1/users/reset/:token',
       permissions: ['get'],
     }],
   }, {
@@ -158,6 +174,80 @@ module.exports = app => {
    */
   app.get('/api/v1/users/validate/:token', app.acl.checkRoles, (req, res) => {
     app.services.users.validateEmail(req.params.token)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users/forgot Send email to recover pass
+   * @apiGroup User
+   * @apiParam {String} email User email
+   * @apiParamExample {json} Input
+   *    {
+   *      "email": "john@connor.net"
+   *    }
+   * @apiSuccess {Number} 1 if operation was success
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/users/forgot', app.acl.checkRoles, (req, res) => {
+    delete req.body.role;
+    app.services.users.forgot(req.body.email)
+      .then(result => {
+        app.services.email.sendRecoveryEmail(req.body.email, result.token);
+        res.json(result);
+      })
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {get} /users Validate token to recover pass
+   * @apiGroup User
+   * @apiParam {String} token to reset pass
+   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "res": 1,
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.get('/api/v1/users/reset/validate/:token', app.acl.checkRoles, (req, res) => {
+    app.services.users.validateReset(req.params.token)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user
+   * @apiGroup User
+   * @apiParam {String} token of user
+   * @apiParam {String} newPassword
+   * @apiParam {String} verifyPassword
+   * @apiParamExample {json} Input
+   *    {
+   *      "token": "abc",
+   *      "newPassword": "abc",
+   *      "verifyPassword": "abc"
+   *    }
+   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "res": 1,
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/users/reset/password/:token', app.acl.checkRoles, (req, res) => {
+    app.services.users.resetPassword(req.params.token, req.body.newPassword)
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });

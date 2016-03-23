@@ -14,7 +14,7 @@
     $stateProvider
 
     .state('password-reset', {
-      url: '/users/password/reset/:token',
+      url: '/user/recovery/:token',
       abstract: false,
       templateUrl: prefix + 'password-reset.template.html',
       controller: 'PasswordResetController as prc',
