@@ -9,7 +9,7 @@
   Routes.$inject = ['$stateProvider', '$urlRouterProvider'];
 
   function Routes($stateProvider, $urlRouterProvider) {
-    var prefix = '../modules/tasks/templates/';
+    const prefix = '../modules/tasks/templates/';
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/');

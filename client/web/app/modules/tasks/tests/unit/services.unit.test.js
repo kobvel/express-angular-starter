@@ -1,6 +1,6 @@
 describe('tasks service tests', () => {
-  var $http;
-  var Tasks;
+  let $http;
+  let Tasks;
 
   // Then we can start by loading the main application module
   beforeEach(module(ApplicationConfiguration.applicationModuleName));
@@ -30,7 +30,7 @@ describe('tasks service tests', () => {
 
   it('get all tasks api call', () => {
     // List options or pagination
-    var options = {
+    const options = {
       // None
     };
 

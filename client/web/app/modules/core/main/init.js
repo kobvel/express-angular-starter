@@ -12,7 +12,7 @@
     .ready(AngularReady);
 
   function AngularReady() {
-    var scroll;
+    const scroll = { };
 
     // Fixing facebook bug with redirect
     if (window.location.hash && window.location.hash === '#_=_') {
@@ -20,10 +20,9 @@
         window.history.pushState('', document.title, window.location.pathname);
       } else {
         // Prevent scrolling by storing the page's current scroll offset
-        scroll = {
-          top: document.body.scrollTop,
-          left: document.body.scrollLeft,
-        };
+        scroll.top = document.body.scrollTop;
+        scroll.left = document.body.scrollLeft;
+
         window.location.hash = '';
         // Restore the scroll offset, should be flicker free
         document.body.scrollTop = scroll.top;

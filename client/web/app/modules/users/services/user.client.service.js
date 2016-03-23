@@ -8,10 +8,10 @@
   Users.$inject = ['MEANRestangular'];
 
   function Users(MEANRestangular) {
-    var service = {
-      edit: edit,
-      me: me,
-      validate: validate,
+    const service = {
+      edit,
+      me,
+      validate,
     };
     return service;
 

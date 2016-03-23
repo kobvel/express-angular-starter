@@ -9,15 +9,15 @@
   Authentication.$inject = ['$rootScope', '$state', '$localStorage', 'MEANRestangular'];
 
   function Authentication($rootScope, $state, $localStorage, MEANRestangular) {
-    var auth = {
+    const auth = {
       user: $localStorage.user,
-      login: login,
-      logout: logout,
-      signup: signup,
-      forgot: forgot,
-      reset: reset,
-      token: token,
-      getToken: getToken,
+      login,
+      logout,
+      signup,
+      forgot,
+      reset,
+      token,
+      getToken,
     };
 
     updateHeader();
@@ -28,7 +28,7 @@
 
     function updateHeader() {
       // Update previous headers
-      var headers = MEANRestangular.defaultHeaders;
+      const headers = MEANRestangular.defaultHeaders;
       if ($localStorage.token) {
         headers.Authorization = 'JWT ' + $localStorage.token;
         // Set default headers
@@ -38,7 +38,7 @@
 
     function removeHeader() {
       // Update previous headers
-      var headers = MEANRestangular.defaultHeaders;
+      const headers = MEANRestangular.defaultHeaders;
       headers.Authorization = undefined;
       // Set default headers
       MEANRestangular.setDefaultHeaders(headers);

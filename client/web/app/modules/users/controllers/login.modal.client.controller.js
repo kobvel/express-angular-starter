@@ -10,7 +10,7 @@
 
   function LoginController($state, $uibModalInstance, $localStorage,
     Authentication, AuthenticationModal) {
-    var vm = this;
+    const vm = this;
     // signup button status
     vm.enabled = true;
     // user credentials
@@ -78,10 +78,10 @@
      */
     function isValidData(field) {
       // validation result
-      var res = true;
+      let res = true;
 
       // Email validation
-      var regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       // Clear global error message
       vm.messages.error = null;

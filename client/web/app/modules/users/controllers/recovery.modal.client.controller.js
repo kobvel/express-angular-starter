@@ -11,7 +11,7 @@
 
   function PasswordRecoveryController($uibModalInstance,
     Authentication, Alert, AuthenticationModal) {
-    var vm = this;
+    const vm = this;
 
     // User credentials (email)
     vm.credentials = {
@@ -75,10 +75,10 @@
      */
     function isValidData(field) {
       // validation result
-      var res = true;
+      let res = true;
 
       // Email validation
-      var regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       // Clear global error message
       vm.messages.error = null;

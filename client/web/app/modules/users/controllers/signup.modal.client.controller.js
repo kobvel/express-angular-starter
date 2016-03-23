@@ -6,12 +6,9 @@
     .controller('SignupController', SignupController);
 
   SignupController
-  .$inject = ['$timeout',
-              '$state',
-              '$uibModalInstance',
-              'AuthenticationModal',
-              'Authentication',
-              'Alert'];
+  .$inject = [
+    '$timeout', '$state', '$uibModalInstance', 'AuthenticationModal', 'Authentication', 'Alert',
+  ];
 
   function SignupController($timeout,
                             $state,
@@ -19,7 +16,7 @@
                             AuthenticationModal,
                             Authentication,
                             Alert) {
-    var vm = this;
+    const vm = this;
     // signup button status
     vm.enabled = true;
     // User credentials
@@ -80,10 +77,10 @@
      */
     function isValidData(field) {
       // validation result
-      var res = true;
-      // Email validation
-      var regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      let res = true;
 
+      // Email validation
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       // Clear global error message
       vm.messages.error = null;

@@ -8,7 +8,7 @@
   EditUserController.$inject = ['Users', 'Alert', 'Authentication'];
 
   function EditUserController(Users, Alert, Authentication) {
-    var vm = this;
+    const vm = this;
     vm.user = {};
 
     vm.edit = edit;

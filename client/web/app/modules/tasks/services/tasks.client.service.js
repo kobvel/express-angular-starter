@@ -8,9 +8,9 @@
   Tasks.$inject = ['$http', 'MEANRestangular'];
 
   function Tasks($http, MEANRestangular) {
-    var service = {
-      create: create,
-      getAll: getAll,
+    const service = {
+      create,
+      getAll,
     };
     return service;
 
