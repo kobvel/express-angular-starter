@@ -30,7 +30,7 @@ module.exports = app => {
 
   service.validateEmail = (token) => {
     const query = { where: { tokenValidate: token } };
-    const value = { emailValidate: 1 };
+    const value = { emailValidate: 1, tokenValidate: null };
     return Users.update(value, query);
   };
 
@@ -69,7 +69,7 @@ module.exports = app => {
     const query = { where: { tokenPassRecovery: token } };
     const value = {
       password: pass,
-      tokenPassRecovery: '',
+      tokenPassRecovery: null,
     };
 
     return Users.update(value, query).then((data) => {
