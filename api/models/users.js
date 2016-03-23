@@ -44,10 +44,12 @@ module.exports = (sequelize, DataType) => {
     },
     tokenValidate: {
       type: DataType.STRING,
+      unique: true,
       defaultValue: '',
     },
     tokenPassRecovery: {
       type: DataType.STRING,
+      unique: true,
       defaultValue: '',
     },
     tokenPassRecoveryDate: {
