@@ -63,7 +63,7 @@ gulp.task('html', ['styles'], () => {
 
   return gulp.src('client/web/app/*.html')
     .pipe(assets)
-  	.pipe($.if('*.js', traceur()))
+    .pipe($.if('*.js', traceur()))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
     .pipe(assets.restore())
