@@ -47,6 +47,15 @@ module.exports = (sequelize, DataType) => {
       unique: true,
       defaultValue: '',
     },
+    tokenPassRecovery: {
+      type: DataType.STRING,
+      unique: true,
+      defaultValue: '',
+    },
+    tokenPassRecoveryDate: {
+      type: DataType.DATE,
+      defaultValue: new Date(),
+    },
   }, {
     hooks: {
       beforeCreate: user => {
