@@ -17,6 +17,7 @@ module.exports = {
     user: '',
     pass: '',
   },
+  verifyEmail: false,
   urlBaseClient: 'https://localhost:9000',
   urlBaseApi: 'https://localhost:3000',
 };
