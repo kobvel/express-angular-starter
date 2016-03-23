@@ -30,5 +30,17 @@ module.exports = app => {
     sendEmail(mailOptions);
   };
 
+  service.sendRecoveryEmail = (email, token) => {
+    const content = 'Please enter <a href=\"' + config.urlBaseClient + '/user/recovery/' + token +
+    '\"> here </a> to change your password.';
+    const subject = 'Recovery Password';
+    const mailOptions = {
+      to: email,
+      subject,
+      html: '<b>' + content + '</b>',
+    };
+    sendEmail(mailOptions);
+  };
+
   return service;
 };

@@ -50,11 +50,11 @@
         // Clear error message
         vm.messages.error = null;
         // Write success message
-        vm.messages.success = message;
+        vm.messages.success = 'Please check your email';
         // Close recovery modal (this)
         $uibModalInstance.dismiss();
         // Open alert modal with success text, and after close go to login
-        Alert.display('Succes', message).result
+        Alert.display('Success', 'Please check your email').result
           .then(AuthenticationModal.openLogin)
           .catch(AuthenticationModal.openLogin);
       }
