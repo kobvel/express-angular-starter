@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 
 module.exports = app => {
   const Users = app.db.models.Users;
+  const config = app.config.config;
   const service = {};
 
   service.findById = (id) => {
@@ -17,7 +18,12 @@ module.exports = app => {
   };
 
   service.create = (user) => {
-    user.tokenValidate = bcrypt.genSaltSync().replace(/\//g, '-').replace(/[^a-zA-Z0-9-_]/g, '');
+    if (config.verifyEmail) {
+      user.tokenValidate = bcrypt.genSaltSync().replace(/\//g, '-').replace(/[^a-zA-Z0-9-_]/g, '');
+    } else {
+      user.tokenValidate = null;
+      user.emailValidate = 1;
+    }
     return Users.create(user);
   };
 
