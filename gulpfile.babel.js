@@ -45,60 +45,7 @@ function lint(files, options) {
   };
 }
 
-const lintOptionsClient = {
-  root: true,
-  extends : [
-    'airbnb/base'
-  ],
-  plugins : [
-    'flow-vars'
-  ],
-  env     : {
-    es6: false,
-    node: true,
-    mocha: true
-  },
-  globals: {
-    app: true,
-    expect: true,
-    request: true,
-    by: true,
-    element: true,
-    browser: true,
-    ApplicationConfiguration: true,
-    angular: true,
-  },
-  rules: {
-    semi : [2, 'always'],
-    'no-param-reassign': [2, {props: false}],
-    'func-names': 0,
-    'no-console': 0,
-    'one-var': 0,
-    'new-cap': 0,
-    'quote-props': 0,
-    'prefer-template': 0,
-    'arrow-body-style': 0,
-    'no-empty-label': 0,
-    'no-labels': 2,
-    'no-unused-vars': [2, { args: 'none', exported: 'ApplicationConfiguration' }],
-    'no-var': 0,
-    'no-use-before-define': 0,
-    'object-shorthand': 0,
-    'prefer-rest-params': 0,
-  }
-};
-
-
-const lintOptionsServer = {
-  env: {
-    mocha: true,
-    node:  true,
-    //es6:   true
-  },
-  global: ['app', 'expect', 'request', 'by', 'element', 'browser']
-};
-
-gulp.task('api:lint', lint('api/**/**/*.js', lintOptionsServer));
+gulp.task('api:lint', lint('api/**/**/*.js'));
 
 //gulp lint has some bugs with the fix option
 gulp.task('api:lint:fix', (done) => {
@@ -107,7 +54,7 @@ gulp.task('api:lint:fix', (done) => {
   });
 });
 
-gulp.task('web:lint', lint('client/web/app/modules/**/*.js', lintOptionsClient));
+gulp.task('web:lint', lint('client/web/app/modules/**/*.js'));
 
 gulp.task('lint', ['api:lint', 'web:lint']);
 

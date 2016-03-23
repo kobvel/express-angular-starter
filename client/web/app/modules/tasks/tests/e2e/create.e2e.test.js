@@ -1,12 +1,12 @@
 'use strict';
 
-var url = browser.params.baseUrl;
+const url = browser.params.baseUrl;
 
-var randomEmail = function () {
+const randomEmail = function () {
   return 'mean_signup_test_' + Math.floor((Math.random() * 10000000) + 1) + '@yopmail.com';
 };
 
-var user = {
+const user = {
   firstName: 'First Name',
   lastName: 'Last Name',
   email: randomEmail(),

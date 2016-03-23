@@ -10,7 +10,7 @@
 
   function PasswordResetController($state, $stateParams,
     Seo, Alert, Authentication, AuthenticationModal) {
-    var vm = this;
+    const vm = this;
     // Reset button text
     vm.buttonText = 'Please wait...';
     // User credentials (password)
@@ -153,7 +153,7 @@
      */
     function isValidData(field) {
       // validation result
-      var res = true;
+      let res = true;
 
       // Clear global error message
       vm.messages.error = null;

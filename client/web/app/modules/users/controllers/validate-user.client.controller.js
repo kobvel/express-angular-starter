@@ -8,7 +8,7 @@
   ValidateUserController.$inject = ['$state', '$timeout', 'Users', 'Alert', 'Authentication'];
 
   function ValidateUserController($state, $timeout, Users, Alert, Authentication) {
-    var vm = this;
+    const vm = this;
     vm.init = init;
     vm.messagge = 'Su email se está validando...';
 

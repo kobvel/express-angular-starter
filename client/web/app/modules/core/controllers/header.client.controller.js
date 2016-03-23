@@ -8,7 +8,7 @@
   HeaderController.$inject = ['$uibModal', '$state', 'Authentication', 'AuthenticationModal'];
 
   function HeaderController($uibModal, $state, Authentication, AuthenticationModal) {
-    var vm = this;
+    const vm = this;
     vm.openLogin = AuthenticationModal.openLogin;
     vm.logout = Authentication.logout;
     vm.authentication = Authentication;

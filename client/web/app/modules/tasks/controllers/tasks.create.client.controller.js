@@ -8,7 +8,7 @@
   CreateTasksController.$inject = ['Tasks', 'Alert'];
 
   function CreateTasksController(Tasks, Alert) {
-    var vm = this;
+    const vm = this;
     vm.task = {
       title: '',
     };

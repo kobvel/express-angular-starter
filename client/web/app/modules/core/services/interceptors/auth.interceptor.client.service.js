@@ -10,7 +10,7 @@
 
   function AuthInterceptor($q, $injector, $rootScope) {
     return {
-      responseError: function (rejection) {
+      responseError: (rejection) => {
         if (!rejection.config.ignoreAuthModule) {
           switch (rejection.status) {
             case 401:

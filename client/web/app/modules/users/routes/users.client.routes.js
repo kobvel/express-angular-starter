@@ -9,7 +9,7 @@
   Routes.$inject = ['$stateProvider', '$urlRouterProvider'];
 
   function Routes($stateProvider, $urlRouterProvider) {
-    var prefix = '../modules/users/templates/';
+    const prefix = '../modules/users/templates/';
 
     $stateProvider
 

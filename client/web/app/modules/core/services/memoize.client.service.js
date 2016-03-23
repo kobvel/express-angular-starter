@@ -11,21 +11,25 @@
     return service;
 
     // //////////////
-    function service() {
-      return memoizeFactory.apply(this, arguments);
+    function service(...args) {
+      return memoizeFactory.apply(this, args);
     }
 
     function memoizeFactory(fn) {
-      var cache = {};
+      const cache = {};
 
-      function memoized() {
-        var args = [].slice.call(arguments);
-        var key = JSON.stringify(args);
-        var fromCache = cache[key];
+      function memoized(...args) {
+        /**
+         * Original code args tratament
+         * let args = [].slice.call(arguments);
+         */
+
+        const key = JSON.stringify(args);
+        const fromCache = cache[key];
         if (fromCache) {
           return fromCache;
         }
-        cache[key] = fn.apply(this, arguments);
+        cache[key] = fn.apply(this, args);
 
         return cache[key];
       }

@@ -11,8 +11,8 @@
     return stabilize(groupByFilter);
 
     function groupByFilter(data, key) {
-      var result = {};
-      var index;
+      const result = {};
+      let index;
 
       if (data && key) {
         for (index = 0; index < data.length; index++) {
