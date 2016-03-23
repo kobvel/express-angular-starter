@@ -12,6 +12,7 @@ import modRewrite  from 'connect-modrewrite';
 import childProcess from 'child_process';
 import karma from 'karma';
 import gulpProtractor from 'gulp-protractor';
+import traceur from 'gulp-traceur-compiler';
 
 const protractor = gulpProtractor.protractor;
 const webdriver_update = gulpProtractor.webdriver_update;
@@ -115,6 +116,7 @@ gulp.task('html', ['styles'], () => {
 
   return gulp.src('client/web/app/*.html')
     .pipe(assets)
+  	.pipe($.if('*.js', traceur()))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
     .pipe(assets.restore())
@@ -128,6 +130,7 @@ gulp.task('angulartemplates', ['styles'], () => {
 
   return gulp.src('client/web/app/modules/*/**/**/*.html')
     .pipe(assets)
+    .pipe($.if('*.js', traceur()))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
     .pipe(assets.restore())
