@@ -6,9 +6,9 @@
     .module('users')
     .config(Routes);
 
-  Routes.$inject = ['$stateProvider', '$urlRouterProvider'];
+  Routes.$inject = ['$stateProvider', '$urlRouterProvider', '$authProvider'];
 
-  function Routes($stateProvider, $urlRouterProvider) {
+  function Routes($stateProvider, $urlRouterProvider, $authProvider) {
     const prefix = '../modules/users/templates/';
 
     $stateProvider
@@ -30,6 +30,56 @@
       abstract: false,
       templateUrl: prefix + 'user-validate.template.html',
       controller: 'ValidateUserController as vuc',
+    });
+
+    /*
+     * Configuration of social network login - satellizer
+     */
+    $authProvider.facebook({
+      clientId: '',
+      url: 'https://localhost:3000/api/v1/auth/facebook',
+    });
+
+    $authProvider.google({
+      clientId: 'Google Client ID',
+    });
+
+    $authProvider.github({
+      clientId: 'GitHub Client ID',
+    });
+
+    $authProvider.linkedin({
+      clientId: 'LinkedIn Client ID',
+    });
+
+    $authProvider.instagram({
+      clientId: 'Instagram Client ID',
+    });
+
+    $authProvider.yahoo({
+      clientId: 'Yahoo Client ID / Consumer Key',
+    });
+
+    $authProvider.live({
+      clientId: 'Microsoft Client ID',
+    });
+
+    $authProvider.twitch({
+      clientId: 'Twitch Client ID',
+    });
+
+    $authProvider.bitbucket({
+      clientId: 'Bitbucket Client ID',
+    });
+
+    // No additional setup required for Twitter
+
+    $authProvider.oauth2({
+      name: 'foursquare',
+      url: '/auth/foursquare',
+      clientId: 'Foursquare Client ID',
+      redirectUri: window.location.origin,
+      authorizationEndpoint: 'https://foursquare.com/oauth2/authenticate',
     });
   }
 }());

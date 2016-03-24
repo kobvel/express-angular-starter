@@ -5,11 +5,11 @@
     .module('users')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$state', '$uibModalInstance', '$localStorage', '$auth',
-    'Authentication', 'AuthenticationModal'];
+  LoginController.$inject = ['$rootScope', '$state', '$uibModalInstance', '$localStorage', '$auth',
+    'Authentication', 'AuthenticationModal', 'MEANRestangular'];
 
-  function LoginController($state, $uibModalInstance, $localStorage, $auth,
-    Authentication, AuthenticationModal) {
+  function LoginController($rootScope, $state, $uibModalInstance, $localStorage, $auth,
+    Authentication, AuthenticationModal, MEANRestangular) {
     const vm = this;
     // signup button status
     vm.enabled = true;
@@ -31,8 +31,32 @@
     vm.isValidData = isValidData;
     vm.authenticate = authenticate;
 
+    function updateHeader() {
+      // Update previous headers
+      const headers = MEANRestangular.defaultHeaders;
+      if ($localStorage.token) {
+        headers.Authorization = 'JWT ' + $localStorage.token;
+        // Set default headers
+        MEANRestangular.setDefaultHeaders(headers);
+      }
+    }
+
     function authenticate(provider) {
-      $auth.authenticate(provider);
+      $auth.authenticate(provider)
+      .then((response) => {
+        console.log('response.user ', response.data.user);
+        Authentication.user = response.data.user;
+        $localStorage.user = response.data.user;
+        $localStorage.token = response.data.token;
+        updateHeader();
+
+        // broadcast user logged message and user data
+        $rootScope.$broadcast('user-login', response.user);
+        $uibModalInstance.close();
+      })
+      .catch((err) => {
+        console.log('err ', err);
+      });
     }
 
     /**
@@ -116,65 +140,5 @@
 
       return res;
     }
-  }
-}());
-
-
-(function () {
-  'use strict';
-
-  angular.module('users')
-    .config(authProvider());
-
-  authProvider.$inject = ['$authProvider'];
-
-  function authProvider($authProvider) {
-    $authProvider.facebook({
-      clientId: '1670753953186317',
-    });
-
-    // Optional: For client-side use (Implicit Grant), set responseType to 'token'
-
-    $authProvider.google({
-      clientId: 'Google Client ID',
-    });
-
-    $authProvider.github({
-      clientId: 'GitHub Client ID',
-    });
-
-    $authProvider.linkedin({
-      clientId: 'LinkedIn Client ID',
-    });
-
-    $authProvider.instagram({
-      clientId: 'Instagram Client ID',
-    });
-
-    $authProvider.yahoo({
-      clientId: 'Yahoo Client ID / Consumer Key',
-    });
-
-    $authProvider.live({
-      clientId: 'Microsoft Client ID',
-    });
-
-    $authProvider.twitch({
-      clientId: 'Twitch Client ID',
-    });
-
-    $authProvider.bitbucket({
-      clientId: 'Bitbucket Client ID',
-    });
-
-    // No additional setup required for Twitter
-
-    $authProvider.oauth2({
-      name: 'foursquare',
-      url: '/auth/foursquare',
-      clientId: 'Foursquare Client ID',
-      redirectUri: window.location.origin,
-      authorizationEndpoint: 'https://foursquare.com/oauth2/authenticate',
-    });
   }
 }());
