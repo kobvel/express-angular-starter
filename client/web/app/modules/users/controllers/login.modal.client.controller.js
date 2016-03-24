@@ -5,10 +5,10 @@
     .module('users')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$state', '$uibModalInstance', '$localStorage',
+  LoginController.$inject = ['$state', '$uibModalInstance', '$localStorage', '$auth',
     'Authentication', 'AuthenticationModal'];
 
-  function LoginController($state, $uibModalInstance, $localStorage,
+  function LoginController($state, $uibModalInstance, $localStorage, $auth,
     Authentication, AuthenticationModal) {
     const vm = this;
     // signup button status
@@ -29,6 +29,11 @@
     vm.openSignup = openSignup;
     vm.openRecovery = openRecovery;
     vm.isValidData = isValidData;
+    vm.authenticate = authenticate;
+
+    function authenticate(provider) {
+      $auth.authenticate(provider);
+    }
 
     /**
      * Try to login
@@ -111,5 +116,65 @@
 
       return res;
     }
+  }
+}());
+
+
+(function () {
+  'use strict';
+
+  angular.module('users')
+    .config(authProvider());
+
+  authProvider.$inject = ['$authProvider'];
+
+  function authProvider($authProvider) {
+    $authProvider.facebook({
+      clientId: '1670753953186317',
+    });
+
+    // Optional: For client-side use (Implicit Grant), set responseType to 'token'
+
+    $authProvider.google({
+      clientId: 'Google Client ID',
+    });
+
+    $authProvider.github({
+      clientId: 'GitHub Client ID',
+    });
+
+    $authProvider.linkedin({
+      clientId: 'LinkedIn Client ID',
+    });
+
+    $authProvider.instagram({
+      clientId: 'Instagram Client ID',
+    });
+
+    $authProvider.yahoo({
+      clientId: 'Yahoo Client ID / Consumer Key',
+    });
+
+    $authProvider.live({
+      clientId: 'Microsoft Client ID',
+    });
+
+    $authProvider.twitch({
+      clientId: 'Twitch Client ID',
+    });
+
+    $authProvider.bitbucket({
+      clientId: 'Bitbucket Client ID',
+    });
+
+    // No additional setup required for Twitter
+
+    $authProvider.oauth2({
+      name: 'foursquare',
+      url: '/auth/foursquare',
+      clientId: 'Foursquare Client ID',
+      redirectUri: window.location.origin,
+      authorizationEndpoint: 'https://foursquare.com/oauth2/authenticate',
+    });
   }
 }());
