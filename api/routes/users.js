@@ -4,7 +4,7 @@ module.exports = app => {
    * ACL configuration
    */
   app.acl.allow([{
-    roles: ['user'],
+    roles: ['user', 'admin'],
     allows: [{
       resources: '/api/v1/users/me',
       permissions: ['get', 'delete'],
@@ -40,7 +40,7 @@ module.exports = app => {
       permissions: ['get'],
     }],
   }, {
-    roles: ['user'],
+    roles: ['user', 'admin'],
     allows: [{
       resources: '/api/v1/users/me',
       permissions: ['put'],

@@ -27,25 +27,6 @@
 
     // implementations
 
-    function authenticate(provider) {
-      return $auth.authenticate(provider)
-      .then((response) => {
-        Authentication.user = response.data.user;
-        $localStorage.user = response.data.user;
-        $localStorage.token = response.data.token;
-        updateHeader();
-
-        // broadcast user logged message and user data
-        $rootScope.$broadcast('user-login', response.user);
-        // $uibModalInstance.close();
-        return Authentication.user;
-      })
-      .catch((err) => {
-        console.log('err ', err);
-        throw err;
-      });
-    }
-
     function updateHeader() {
       // Update previous headers
       const headers = MEANRestangular.defaultHeaders;
@@ -66,6 +47,28 @@
 
     function getToken() {
       return $localStorage.token;
+    }
+
+    /*
+     * Social network authenticate
+     */
+    function authenticate(provider) {
+      return $auth.authenticate(provider)
+      .then((response) => {
+        auth.user = response.data.user;
+        $localStorage.user = response.data.user;
+        $localStorage.token = response.data.token;
+        updateHeader();
+
+        // broadcast user logged message and user data
+        $rootScope.$broadcast('user-login', response.data.user);
+        // $uibModalInstance.close();
+        return Authentication.user;
+      })
+      .catch((err) => {
+        console.log('err ', err);
+        throw err;
+      });
     }
 
     /**
