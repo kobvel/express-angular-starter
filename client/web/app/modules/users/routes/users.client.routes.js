@@ -35,6 +35,8 @@
     /*
      * Configuration of social network login - satellizer
      */
+    $authProvider.authToken = 'JWT';
+
     $authProvider.facebook({
       clientId: '',
       url: 'https://localhost:3000/api/v1/auth/facebook',
