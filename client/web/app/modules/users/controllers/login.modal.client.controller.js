@@ -31,27 +31,9 @@
     vm.isValidData = isValidData;
     vm.authenticate = authenticate;
 
-    function updateHeader() {
-      // Update previous headers
-      const headers = MEANRestangular.defaultHeaders;
-      if ($localStorage.token) {
-        headers.Authorization = 'JWT ' + $localStorage.token;
-        // Set default headers
-        MEANRestangular.setDefaultHeaders(headers);
-      }
-    }
-
     function authenticate(provider) {
-      $auth.authenticate(provider)
+      Authentication.authenticate(provider)
       .then((response) => {
-        console.log('response.user ', response.data.user);
-        Authentication.user = response.data.user;
-        $localStorage.user = response.data.user;
-        $localStorage.token = response.data.token;
-        updateHeader();
-
-        // broadcast user logged message and user data
-        $rootScope.$broadcast('user-login', response.user);
         $uibModalInstance.close();
       })
       .catch((err) => {

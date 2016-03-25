@@ -6,9 +6,9 @@
     .module('users')
     .factory('Authentication', Authentication);
 
-  Authentication.$inject = ['$rootScope', '$state', '$localStorage', 'MEANRestangular'];
+  Authentication.$inject = ['$rootScope', '$state', '$auth', '$localStorage', 'MEANRestangular'];
 
-  function Authentication($rootScope, $state, $localStorage, MEANRestangular) {
+  function Authentication($rootScope, $state, $auth, $localStorage, MEANRestangular) {
     const auth = {
       user: $localStorage.user,
       login,
@@ -18,6 +18,7 @@
       reset,
       token,
       getToken,
+      authenticate,
     };
 
     updateHeader();
@@ -25,6 +26,25 @@
     return auth;
 
     // implementations
+
+    function authenticate(provider) {
+      return $auth.authenticate(provider)
+      .then((response) => {
+        Authentication.user = response.data.user;
+        $localStorage.user = response.data.user;
+        $localStorage.token = response.data.token;
+        updateHeader();
+
+        // broadcast user logged message and user data
+        $rootScope.$broadcast('user-login', response.user);
+        // $uibModalInstance.close();
+        return Authentication.user;
+      })
+      .catch((err) => {
+        console.log('err ', err);
+        throw err;
+      });
+    }
 
     function updateHeader() {
       // Update previous headers
