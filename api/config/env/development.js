@@ -28,4 +28,5 @@ module.exports = {
   TWITTER_KEY: '',
   TWITTER_SECRET: '',
   INSTAGRAM_SECRET: '',
+  GOOGLE_SECRET: '',
 };

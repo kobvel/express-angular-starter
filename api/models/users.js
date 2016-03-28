@@ -65,6 +65,12 @@ module.exports = (sequelize, DataType) => {
       allowNull: true,
       defaultValue: null,
     },
+    google: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
     tokenValidate: {
       type: DataType.STRING,
       unique: true,

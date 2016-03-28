@@ -40,6 +40,10 @@ module.exports = app => {
       permissions: ['post'],
     },
     {
+      resources: '/api/v1/auth/google',
+      permissions: ['post'],
+    },
+    {
       resources: '/api/v1/users/reset/password/:token',
       permissions: ['post'],
     },
@@ -266,8 +270,27 @@ module.exports = app => {
       });
   });
 
-  /*
-   *  Facebook Login
+  /**
+   * @api {post} /users Register a new user (Facebook)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx" 
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
    */
   app.post('/api/v1/auth/facebook', app.acl.checkRoles, (req, res) => {
     app.services.social.facebook(req.body.code, req.body.clientId,
@@ -278,8 +301,27 @@ module.exports = app => {
       });
   });
 
-  /*
-   *  Twitter Login
+  /**
+   * @api {post} /users Register a new user (Twitter)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx" 
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
    */
   app.post('/api/v1/auth/twitter', app.acl.checkRoles, (req, res) => {
     app.services.social.twitter(req.body)
@@ -289,8 +331,27 @@ module.exports = app => {
       });
   });
 
-  /*
-   *  Instagram Login
+  /**
+   * @api {post} /users Register a new user (Instagram)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx" 
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
    */
   app.post('/api/v1/auth/instagram', app.acl.checkRoles, (req, res) => {
     app.services.social.instagram(req.body.code, req.body.clientId,
@@ -298,6 +359,38 @@ module.exports = app => {
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user (Google)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx" 
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/auth/google', app.acl.checkRoles, (req, res) => {
+    console.log('req.body ', req.body);
+    app.services.social.google(req.body.code, req.body.clientId,
+    req.body.redirectUri)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error });
       });
   });
 };

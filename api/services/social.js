@@ -210,6 +210,66 @@ module.exports = app => {
     return deferred.promise;
   };
 
+  service.google = (code, clientId, redirectUri) => {
+    const deferred = Q.defer();
+    const accessTokenUrl = 'https://accounts.google.com/o/oauth2/token';
+    const peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
+    const params = {
+      code,
+      client_id: clientId,
+      client_secret: config.GOOGLE_SECRET,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    };
+    request.post(accessTokenUrl, { form: params, json: true },
+    (err, response, tokenReturn) => {
+      const accessToken = tokenReturn.access_token;
+      const headers = { Authorization: 'Bearer ' + accessToken };
+      request.get({ url: peopleApiUrl, headers, json: true },
+      (err2, response2, profile) => {
+        if (profile.error) {
+          deferred.reject({ err: profile.error.errors[0].message });
+        } else {
+          const query = { where: { google: profile.sub } };
+          Users.findOne(query)
+          .then((existingUser) => {
+            if (existingUser) {
+              const token = createJWT(existingUser);
+              deferred.resolve({
+                user: {
+                  id: existingUser.dataValues.id,
+                  name: existingUser.name,
+                },
+                token,
+              });
+            } else {
+              const user = {};
+              const salt = bcrypt.genSaltSync();
+              user.password = bcrypt.hashSync(salt, salt);
+              user.google = profile.sub;
+              user.emailValidate = 1;
+              user.email = profile.email;
+              user.picture = profile.picture;
+              user.name = profile.given_name + ' ' + profile.family_name;
+              Users.create(user)
+              .then((data) => {
+                const token = createJWT(user);
+                deferred.resolve({
+                  user: {
+                    id: data.dataValues.id,
+                    name: user.name,
+                  },
+                  token,
+                });
+              });
+            }
+          });
+        }
+      });
+    });
+    return deferred.promise;
+  };
+
   return service;
 };
 

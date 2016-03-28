@@ -48,7 +48,8 @@
     });
 
     $authProvider.google({
-      clientId: 'Google Client ID',
+      clientId: '',
+      url: 'https://localhost:3000/api/v1/auth/google',
     });
 
     $authProvider.github({
