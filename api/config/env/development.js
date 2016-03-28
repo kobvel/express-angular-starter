@@ -25,4 +25,7 @@ module.exports = {
   urlBaseClient: 'https://localhost:9000',
   urlBaseApi: 'https://localhost:3000',
   FACEBOOK_SECRET: '', // Facebook secret API
+  TWITTER_KEY: '',
+  TWITTER_SECRET: '',
+  INSTAGRAM_SECRET: '',
 };

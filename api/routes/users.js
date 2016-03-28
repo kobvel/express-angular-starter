@@ -32,6 +32,14 @@ module.exports = app => {
       permissions: ['post'],
     },
     {
+      resources: '/api/v1/auth/twitter',
+      permissions: ['post'],
+    },
+    {
+      resources: '/api/v1/auth/instagram',
+      permissions: ['post'],
+    },
+    {
       resources: '/api/v1/users/reset/password/:token',
       permissions: ['post'],
     },
@@ -261,9 +269,32 @@ module.exports = app => {
   /*
    *  Facebook Login
    */
-  app.post('/api/v1/auth/facebook', (req, res) => {
+  app.post('/api/v1/auth/facebook', app.acl.checkRoles, (req, res) => {
     app.services.social.facebook(req.body.code, req.body.clientId,
     req.body.redirectUri, req.header('Authorization'))
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /*
+   *  Twitter Login
+   */
+  app.post('/api/v1/auth/twitter', app.acl.checkRoles, (req, res) => {
+    app.services.social.twitter(req.body)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /*
+   *  Instagram Login
+   */
+  app.post('/api/v1/auth/instagram', app.acl.checkRoles, (req, res) => {
+    app.services.social.instagram(req.body.code, req.body.clientId,
+    req.body.redirectUri)
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });

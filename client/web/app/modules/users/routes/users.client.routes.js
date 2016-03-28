@@ -42,6 +42,11 @@
       url: 'https://localhost:3000/api/v1/auth/facebook',
     });
 
+    $authProvider.twitter({
+      url: 'https://localhost:3000/api/v1/auth/twitter',
+      responseType: 'token',
+    });
+
     $authProvider.google({
       clientId: 'Google Client ID',
     });
@@ -55,7 +60,8 @@
     });
 
     $authProvider.instagram({
-      clientId: 'Instagram Client ID',
+      clientId: '',
+      url: 'https://localhost:3000/api/v1/auth/instagram',
     });
 
     $authProvider.yahoo({
