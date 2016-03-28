@@ -35,6 +35,7 @@
         // Set default headers
         MEANRestangular.setDefaultHeaders(headers);
       }
+      delete localStorage.satellizer_token;
     }
 
     function removeHeader() {
@@ -43,6 +44,7 @@
       headers.Authorization = undefined;
       // Set default headers
       MEANRestangular.setDefaultHeaders(headers);
+      delete localStorage.satellizer_token;
     }
 
     function getToken() {
