@@ -26,13 +26,13 @@ module.exports = app => {
       redirect_uri: redirectUri,
     };
     request.get({ url: accessTokenUrl, qs: params, json: true },
-    (err, response, accessToken) => {
-      if (response.statusCode !== 200) {
+    (errToken, responseToken, accessToken) => {
+      if (responseToken.statusCode !== 200) {
         deferred.reject({ err: accessToken.error.message });
       }
       request.get({ url: graphApiUrl, qs: accessToken, json: true },
-      (err2, response2, profile) => {
-        if (response2.statusCode !== 200) {
+      (errAuth, responseAuth, profile) => {
+        if (responseAuth.statusCode !== 200) {
           deferred.reject({ err: profile.error.message });
         } else {
           const query = { where: { facebook: profile.id } };
@@ -77,86 +77,65 @@ module.exports = app => {
 
   service.twitter = (reqBody) => {
     const deferred = Q.defer();
-    const requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
     const accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
     const profileUrl = 'https://api.twitter.com/1.1/users/show.json?screen_name=';
+    const accessTokenOauth = {
+      consumer_key: config.TWITTER_KEY,
+      consumer_secret: config.TWITTER_SECRET,
+      token: reqBody.oauth_token,
+      verifier: reqBody.oauth_verifier,
+    };
 
-    // Part 1 of 2: Initial request from Satellizer.
-    if (!reqBody.oauth_token || !reqBody.oauth_verifier) {
-      const requestTokenOauth = {
+    request.post({ url: accessTokenUrl, oauth: accessTokenOauth },
+    (errToken, responseToken, accessTokenParam) => {
+      const accessToken = qs.parse(accessTokenParam);
+      const profileOauth = {
         consumer_key: config.TWITTER_KEY,
         consumer_secret: config.TWITTER_SECRET,
-        callback: reqBody.redirectUri,
-      };
-      // Step 1. Obtain request token for the authorization popup.
-      request.post({ url: requestTokenUrl, oauth: requestTokenOauth }, (err, response, body) => {
-        const oauthToken = qs.parse(body);
-        // Step 2. Send OAuth token back to open the authorization screen.
-        deferred.resolve(oauthToken);
-      });
-    } else {
-      // Part 2 of 2: Second request after Authorize app is clicked.
-      const accessTokenOauth = {
-        consumer_key: config.TWITTER_KEY,
-        consumer_secret: config.TWITTER_SECRET,
-        token: reqBody.oauth_token,
-        verifier: reqBody.oauth_verifier,
+        oauth_token: accessToken.oauth_token,
       };
 
-      // Step 3. Exchange oauth token and oauth verifier for access token.
-      request.post({ url: accessTokenUrl, oauth: accessTokenOauth },
-      (err, response, accessTokenParam) => {
-        const accessToken = qs.parse(accessTokenParam);
-        const profileOauth = {
-          consumer_key: config.TWITTER_KEY,
-          consumer_secret: config.TWITTER_SECRET,
-          oauth_token: accessToken.oauth_token,
-        };
-
-        // Step 4. Retrieve profile information about the current user.
-        request.get({
-          url: profileUrl + accessToken.screen_name,
-          oauth: profileOauth,
-          json: true,
-        }, (err2, response2, profile) => {
-          // Step 5b. Create a new user account or return an existing one.
-          Users.findOne({ twitter: profile.id })
-          .then((err3, existingUser) => {
-            if (existingUser) {
+      request.get({
+        url: profileUrl + accessToken.screen_name,
+        oauth: profileOauth,
+        json: true,
+      }, (errAuth, responseAuth, profile) => {
+        Users.findOne({ twitter: profile.id })
+        .then((existingUser) => {
+          if (existingUser) {
+            deferred.resolve({
+              user: {
+                id: existingUser.id,
+                name: existingUser.name,
+              },
+              token: createJWT(existingUser),
+            });
+          } else {
+            const user = {};
+            const salt = bcrypt.genSaltSync();
+            user.password = bcrypt.hashSync(salt, salt);
+            user.emailValidate = 1;
+            user.email = profile.email;
+            Users.create(user);
+            user.twitter = profile.id;
+            user.name = profile.name;
+            user.picture = profile.profile_image_url.replace('_normal', '');
+            Users.create(user)
+            .then((data) => {
+              const token = createJWT(user);
               deferred.resolve({
                 user: {
-                  id: existingUser.id,
-                  name: existingUser.name,
+                  id: data.dataValues.id,
+                  name: user.name,
                 },
-                token: createJWT(existingUser),
+                token,
               });
-            } else {
-              const user = {};
-              const salt = bcrypt.genSaltSync();
-              user.password = bcrypt.hashSync(salt, salt);
-              user.emailValidate = 1;
-              user.email = profile.email;
-              Users.create(user);
-              user.twitter = profile.id;
-              user.name = profile.name;
-              user.picture = profile.profile_image_url.replace('_normal', '');
-              Users.create(user)
-              .then((data) => {
-                const token = createJWT(user);
-                deferred.resolve({
-                  user: {
-                    id: data.dataValues.id,
-                    name: user.name,
-                  },
-                  token,
-                });
-              });
-            }
-          });
-          // end
+            });
+          }
         });
+        // end
       });
-    }
+    });
     return deferred.promise;
   };
 
@@ -171,7 +150,7 @@ module.exports = app => {
       grant_type: 'authorization_code',
     };
     request.post({ url: accessTokenUrl, form: params, json: true },
-    (err, response, body) => {
+    (errToken, responseToken, body) => {
       const query = { where: { instagram: body.user.id } };
       Users.findOne(query)
       .then((existingUser) => {
@@ -222,11 +201,11 @@ module.exports = app => {
       grant_type: 'authorization_code',
     };
     request.post(accessTokenUrl, { form: params, json: true },
-    (err, response, tokenReturn) => {
+    (errToken, responseToken, tokenReturn) => {
       const accessToken = tokenReturn.access_token;
       const headers = { Authorization: 'Bearer ' + accessToken };
       request.get({ url: peopleApiUrl, headers, json: true },
-      (err2, response2, profile) => {
+      (errAuth, responseAuth, profile) => {
         if (profile.error) {
           deferred.reject({ err: profile.error.errors[0].message });
         } else {
@@ -251,6 +230,67 @@ module.exports = app => {
               user.email = profile.email;
               user.picture = profile.picture;
               user.name = profile.given_name + ' ' + profile.family_name;
+              Users.create(user)
+              .then((data) => {
+                const token = createJWT(user);
+                deferred.resolve({
+                  user: {
+                    id: data.dataValues.id,
+                    name: user.name,
+                  },
+                  token,
+                });
+              });
+            }
+          });
+        }
+      });
+    });
+    return deferred.promise;
+  };
+
+  service.pinterest = (code, clientId, redirectUri) => {
+    const deferred = Q.defer();
+    const accessTokenUrl = 'https://api.pinterest.com/v1/oauth/token';
+    const fields = ['id', 'first_name', 'last_name', 'username', 'image'];
+    const peopleApiUrl = 'https://api.pinterest.com/v1/me?fields=' + fields.join(',');
+    const params = {
+      code,
+      client_id: config.PINTEREST_KEY,
+      client_secret: config.PINTEREST_SECRET,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    };
+    request.post(accessTokenUrl, { form: params, json: true },
+    (errToken, responseToken, tokenReturn) => {
+      const accessToken = tokenReturn.access_token;
+      const headers = { Authorization: 'Bearer ' + accessToken };
+      request.get({ url: peopleApiUrl, headers, json: true },
+      (errAuth, responseAuth, profile) => {
+        if (errAuth) {
+          deferred.reject({ err: errAuth });
+        } else {
+          const query = { where: { pinterest: profile.data.id } };
+          Users.findOne(query)
+          .then((existingUser) => {
+            if (existingUser) {
+              const token = createJWT(existingUser);
+              deferred.resolve({
+                user: {
+                  id: existingUser.dataValues.id,
+                  name: existingUser.name,
+                },
+                token,
+              });
+            } else {
+              const user = {};
+              const salt = bcrypt.genSaltSync();
+              user.password = bcrypt.hashSync(salt, salt);
+              user.pinterest = profile.data.id;
+              user.emailValidate = 1;
+              user.email = profile.data.username + '@pinterest.com';
+              user.picture = profile.data.image['60x60'].url;
+              user.name = profile.data.first_name + ' ' + profile.data.last_name;
               Users.create(user)
               .then((data) => {
                 const token = createJWT(user);

@@ -44,6 +44,10 @@ module.exports = app => {
       permissions: ['post'],
     },
     {
+      resources: '/api/v1/auth/pinterest',
+      permissions: ['post'],
+    },
+    {
       resources: '/api/v1/users/reset/password/:token',
       permissions: ['post'],
     },
@@ -253,7 +257,8 @@ module.exports = app => {
    *      "newPassword": "abc",
    *      "verifyPassword": "abc"
    *    }
-   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
    * @apiSuccessExample {json} Success
    *    HTTP/1.1 200 OK
    *    {
@@ -282,12 +287,13 @@ module.exports = app => {
    *      "clientId": "abc",
    *      "redirectUri": "http://redirect"
    *    }
-   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
    * @apiSuccessExample {json} Success
    *    HTTP/1.1 200 OK
    *    {
    *      "user": { "name" : "John", "id": 1 },
-   *      "token": "abczyx" 
+   *      "token": "abczyx"
    *    }
    * @apiErrorExample {json} Register error
    *    HTTP/1.1 412 Precondition Failed
@@ -313,12 +319,13 @@ module.exports = app => {
    *      "clientId": "abc",
    *      "redirectUri": "http://redirect"
    *    }
-   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
    * @apiSuccessExample {json} Success
    *    HTTP/1.1 200 OK
    *    {
    *      "user": { "name" : "John", "id": 1 },
-   *      "token": "abczyx" 
+   *      "token": "abczyx"
    *    }
    * @apiErrorExample {json} Register error
    *    HTTP/1.1 412 Precondition Failed
@@ -343,12 +350,13 @@ module.exports = app => {
    *      "clientId": "abc",
    *      "redirectUri": "http://redirect"
    *    }
-   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
    * @apiSuccessExample {json} Success
    *    HTTP/1.1 200 OK
    *    {
    *      "user": { "name" : "John", "id": 1 },
-   *      "token": "abczyx" 
+   *      "token": "abczyx"
    *    }
    * @apiErrorExample {json} Register error
    *    HTTP/1.1 412 Precondition Failed
@@ -374,19 +382,51 @@ module.exports = app => {
    *      "clientId": "abc",
    *      "redirectUri": "http://redirect"
    *    }
-   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
    * @apiSuccessExample {json} Success
    *    HTTP/1.1 200 OK
    *    {
    *      "user": { "name" : "John", "id": 1 },
-   *      "token": "abczyx" 
+   *      "token": "abczyx"
    *    }
    * @apiErrorExample {json} Register error
    *    HTTP/1.1 412 Precondition Failed
    */
   app.post('/api/v1/auth/google', app.acl.checkRoles, (req, res) => {
-    console.log('req.body ', req.body);
     app.services.social.google(req.body.code, req.body.clientId,
+    req.body.redirectUri)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user (Pinterest)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx"
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/auth/pinterest', app.acl.checkRoles, (req, res) => {
+    app.services.social.pinterest(req.body.code, req.body.clientId,
     req.body.redirectUri)
       .then(result => res.json(result))
       .catch(error => {

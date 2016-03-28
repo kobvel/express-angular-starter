@@ -81,6 +81,16 @@
       clientId: 'Bitbucket Client ID',
     });
 
+    $authProvider.oauth2({
+      name: 'pinterest',
+      url: 'https://localhost:3000/api/v1/auth/pinterest',
+      clientId: '&scope=read_public',
+      redirectUri: window.location.origin,
+      response_type: 'token',
+      scope: 'read_public',
+      authorizationEndpoint: 'https://api.pinterest.com/oauth/',
+    });
+
     // No additional setup required for Twitter
 
     $authProvider.oauth2({

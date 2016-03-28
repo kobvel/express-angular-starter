@@ -71,6 +71,12 @@ module.exports = (sequelize, DataType) => {
       allowNull: true,
       defaultValue: null,
     },
+    pinterest: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
     tokenValidate: {
       type: DataType.STRING,
       unique: true,
