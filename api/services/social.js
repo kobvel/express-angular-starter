@@ -152,7 +152,7 @@ module.exports = app => {
     };
     request.post({ url: accessTokenUrl, form: params, json: true },
     (errToken, responseToken, body) => {
-      if(body.error_message) {
+      if (body.error_message) {
         deferred.reject({ message: body.error_message });
       } else {
         const query = { where: { instagram: body.user.id } };
@@ -207,49 +207,53 @@ module.exports = app => {
     };
     request.post(accessTokenUrl, { form: params, json: true },
     (errToken, responseToken, tokenReturn) => {
-      const accessToken = tokenReturn.access_token;
-      const headers = { Authorization: 'Bearer ' + accessToken };
-      request.get({ url: peopleApiUrl, headers, json: true },
-      (errAuth, responseAuth, profile) => {
-        if (profile.error) {
-          deferred.reject({ err: profile.error.errors[0].message });
-        } else {
-          const query = { where: { google: profile.sub } };
-          Users.findOne(query)
-          .then((existingUser) => {
-            if (existingUser) {
-              const token = createJWT(existingUser);
-              deferred.resolve({
-                user: {
-                  id: existingUser.dataValues.id,
-                  name: existingUser.name,
-                },
-                token,
-              });
-            } else {
-              const user = {};
-              const salt = bcrypt.genSaltSync();
-              user.password = bcrypt.hashSync(salt, salt);
-              user.google = profile.sub;
-              user.emailValidate = 1;
-              user.email = profile.email;
-              user.picture = profile.picture;
-              user.name = profile.given_name + ' ' + profile.family_name;
-              Users.create(user)
-              .then((data) => {
-                const token = createJWT(user);
+      if (responseToken.body.error) {
+        deferred.reject({ message: responseToken.body.error });
+      } else {
+        const accessToken = tokenReturn.access_token;
+        const headers = { Authorization: 'Bearer ' + accessToken };
+        request.get({ url: peopleApiUrl, headers, json: true },
+        (errAuth, responseAuth, profile) => {
+          if (profile.error) {
+            deferred.reject({ message: profile.error.errors[0].message });
+          } else {
+            const query = { where: { google: profile.sub } };
+            Users.findOne(query)
+            .then((existingUser) => {
+              if (existingUser) {
+                const token = createJWT(existingUser);
                 deferred.resolve({
                   user: {
-                    id: data.dataValues.id,
-                    name: user.name,
+                    id: existingUser.dataValues.id,
+                    name: existingUser.name,
                   },
                   token,
                 });
-              });
-            }
-          });
-        }
-      });
+              } else {
+                const user = {};
+                const salt = bcrypt.genSaltSync();
+                user.password = bcrypt.hashSync(salt, salt);
+                user.google = profile.sub;
+                user.emailValidate = 1;
+                user.email = profile.email;
+                user.picture = profile.picture;
+                user.name = profile.given_name + ' ' + profile.family_name;
+                Users.create(user)
+                .then((data) => {
+                  const token = createJWT(user);
+                  deferred.resolve({
+                    user: {
+                      id: data.dataValues.id,
+                      name: user.name,
+                    },
+                    token,
+                  });
+                });
+              }
+            });
+          }
+        });
+      }
     });
     return deferred.promise;
   };
