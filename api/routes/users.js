@@ -300,7 +300,7 @@ module.exports = app => {
    */
   app.post('/api/v1/auth/facebook', app.acl.checkRoles, (req, res) => {
     app.services.social.facebook(req.body.code, req.body.clientId,
-    req.body.redirectUri, req.header('Authorization'))
+    req.body.redirectUri)
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });

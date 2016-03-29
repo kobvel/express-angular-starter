@@ -37,7 +37,7 @@
         $uibModalInstance.close();
       })
       .catch((err) => {
-        console.log('err ', err);
+        vm.messages.error = err.data.msg;
       });
     }
 

@@ -14,7 +14,7 @@ module.exports = app => {
     return jwt.encode(payload, config.jwtSecret);
   }
 
-  service.facebook = (code, clientId, redirectUri, authorization) => {
+  service.facebook = (code, clientId, redirectUri) => {
     const deferred = Q.defer();
     const fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
     const accessTokenUrl = 'https://graph.facebook.com/v2.5/oauth/access_token';
@@ -28,49 +28,50 @@ module.exports = app => {
     request.get({ url: accessTokenUrl, qs: params, json: true },
     (errToken, responseToken, accessToken) => {
       if (responseToken.statusCode !== 200) {
-        deferred.reject({ err: accessToken.error.message });
-      }
-      request.get({ url: graphApiUrl, qs: accessToken, json: true },
-      (errAuth, responseAuth, profile) => {
-        if (responseAuth.statusCode !== 200) {
-          deferred.reject({ err: profile.error.message });
-        } else {
-          const query = { where: { facebook: profile.id } };
-          Users.findOne(query)
-          .then((existingUser) => {
-            if (existingUser) {
-              const token = createJWT(existingUser);
-              deferred.resolve({
-                user: {
-                  id: existingUser.dataValues.id,
-                  name: existingUser.name,
-                },
-                token,
-              });
-            } else {
-              const user = {};
-              const salt = bcrypt.genSaltSync();
-              user.password = bcrypt.hashSync(salt, salt);
-              user.facebook = profile.id;
-              user.emailValidate = 1;
-              user.email = profile.email;
-              user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
-              user.name = profile.first_name + ' ' + profile.last_name;
-              Users.create(user)
-              .then((data) => {
-                const token = createJWT(user);
+        deferred.reject({ message: responseToken.body.error.message });
+      } else {
+        request.get({ url: graphApiUrl, qs: accessToken, json: true },
+        (errAuth, responseAuth, profile) => {
+          if (responseAuth.statusCode !== 200) {
+            deferred.reject({ message: responseAuth.body.error.message });
+          } else {
+            const query = { where: { facebook: profile.id } };
+            Users.findOne(query)
+            .then((existingUser) => {
+              if (existingUser) {
+                const token = createJWT(existingUser);
                 deferred.resolve({
                   user: {
-                    id: data.dataValues.id,
-                    name: user.name,
+                    id: existingUser.dataValues.id,
+                    name: existingUser.name,
                   },
                   token,
                 });
-              });
-            }
-          });
-        }
-      });
+              } else {
+                const user = {};
+                const salt = bcrypt.genSaltSync();
+                user.password = bcrypt.hashSync(salt, salt);
+                user.facebook = profile.id;
+                user.emailValidate = 1;
+                user.email = profile.email;
+                user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+                user.name = profile.first_name + ' ' + profile.last_name;
+                Users.create(user)
+                .then((data) => {
+                  const token = createJWT(user);
+                  deferred.resolve({
+                    user: {
+                      id: data.dataValues.id,
+                      name: user.name,
+                    },
+                    token,
+                  });
+                });
+              }
+            });
+          }
+        });
+      }
     });
     return deferred.promise;
   };
@@ -151,40 +152,44 @@ module.exports = app => {
     };
     request.post({ url: accessTokenUrl, form: params, json: true },
     (errToken, responseToken, body) => {
-      const query = { where: { instagram: body.user.id } };
-      Users.findOne(query)
-      .then((existingUser) => {
-        if (existingUser) {
-          const token = createJWT(existingUser);
-          deferred.resolve({
-            user: {
-              id: existingUser.dataValues.id,
-              name: existingUser.name,
-            },
-            token,
-          });
-        } else {
-          const user = {};
-          const salt = bcrypt.genSaltSync();
-          user.password = bcrypt.hashSync(salt, salt);
-          user.instagram = body.user.id;
-          user.emailValidate = 1;
-          user.email = body.user.username + '@instagram.com';
-          user.picture = body.user.profile_picture;
-          user.name = body.user.full_name;
-          Users.create(user)
-          .then((data) => {
-            const token = createJWT(user);
+      if(body.error_message) {
+        deferred.reject({ message: body.error_message });
+      } else {
+        const query = { where: { instagram: body.user.id } };
+        Users.findOne(query)
+        .then((existingUser) => {
+          if (existingUser) {
+            const token = createJWT(existingUser);
             deferred.resolve({
               user: {
-                id: data.dataValues.id,
-                name: user.name,
+                id: existingUser.dataValues.id,
+                name: existingUser.name,
               },
               token,
             });
-          });
-        }
-      });
+          } else {
+            const user = {};
+            const salt = bcrypt.genSaltSync();
+            user.password = bcrypt.hashSync(salt, salt);
+            user.instagram = body.user.id;
+            user.emailValidate = 1;
+            user.email = body.user.username + '@instagram.com';
+            user.picture = body.user.profile_picture;
+            user.name = body.user.full_name;
+            Users.create(user)
+            .then((data) => {
+              const token = createJWT(user);
+              deferred.resolve({
+                user: {
+                  id: data.dataValues.id,
+                  name: user.name,
+                },
+                token,
+              });
+            });
+          }
+        });
+      }
     });
     return deferred.promise;
   };
