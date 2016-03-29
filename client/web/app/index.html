@@ -9,8 +9,7 @@
 
   <!-- build:css styles/vendor.css -->
   <!-- bower:css -->
-  <link rel='stylesheet' href='/bower_components/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
-
+  <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -59,6 +58,7 @@
 <script src="/bower_components/ngstorage/ngStorage.js"></script>
 <script src="/bower_components/angular-animate/angular-animate.js"></script>
 <script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
+<script src="/bower_components/satellizer/satellizer.js"></script>
 
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
@@ -76,40 +76,43 @@
 <!-- endbuild -->
 
 <!-- build:js /scripts/main.js -->
-<script src="modules/core/main/config.js"></script>
-<script src="modules/core/main/init.js"></script>
-<script src="modules/core/main/angular-config.js"></script>
-<script src="modules/core/main/angular-run.js"></script>
+<script src="/app/modules/core/main/config.js"></script>
+<script src="/app/modules/core/main/init.js"></script>
+<script src="/app/modules/core/main/angular-config.js"></script>
+<script src="/app/modules/core/main/angular-run.js"></script>
 
-<script src="modules/core/core.client.module.js"></script>
-<script src="modules/core/routes/core.client.routes.js"></script>
-<script src="modules/core/filters/sanitize.client.filter.js"></script>
-<script src="modules/core/filters/groupby.client.filter.js"></script>
-<script src="modules/core/services/memoize.client.service.js"></script>
-<script src="modules/core/services/mean_restangular.client.service.js"></script>
-<script src="modules/core/services/seo.client.service.js"></script>
-<script src="modules/core/services/alert.client.service.js"></script>
-<script src="modules/core/services/interceptors/auth.interceptor.client.service.js"></script>
-<script src="modules/core/controllers/home.client.controller.js"></script>
-<script src="modules/core/controllers/header.client.controller.js"></script>
-<script src="modules/core/controllers/head.client.controller.js"></script>
-<script src="modules/core/controllers/modal_alert.client.controller.js"></script>
-<script src="modules/core/controllers/modal_confirm.client.controller.js"></script>
+<script src="/app/modules/core/core.client.module.js"></script>
+<script src="/app/modules/core/routes/core.client.routes.js"></script>
+<script src="/app/modules/core/filters/sanitize.client.filter.js"></script>
+<script src="/app/modules/core/filters/groupby.client.filter.js"></script>
+<script src="/app/modules/core/services/memoize.client.service.js"></script>
+<script src="/app/modules/core/services/mean_restangular.client.service.js"></script>
+<script src="/app/modules/core/services/seo.client.service.js"></script>
+<script src="/app/modules/core/services/alert.client.service.js"></script>
+<script src="/app/modules/core/services/interceptors/auth.interceptor.client.service.js"></script>
+<script src="/app/modules/core/controllers/home.client.controller.js"></script>
+<script src="/app/modules/core/controllers/header.client.controller.js"></script>
+<script src="/app/modules/core/controllers/head.client.controller.js"></script>
+<script src="/app/modules/core/controllers/modal_alert.client.controller.js"></script>
+<script src="/app/modules/core/controllers/modal_confirm.client.controller.js"></script>
 
-<script src="modules/tasks/tasks.client.module.js"></script>
-<script src="modules/tasks/routes/tasks.client.routes.js"></script>
-<script src="modules/tasks/services/tasks.client.service.js"></script>
-<script src="modules/tasks/controllers/tasks.create.client.controller.js"></script>
-<script src="modules/tasks/controllers/tasks.list.client.controller.js"></script>
+<script src="/app/modules/tasks/tasks.client.module.js"></script>
+<script src="/app/modules/tasks/routes/tasks.client.routes.js"></script>
+<script src="/app/modules/tasks/services/tasks.client.service.js"></script>
+<script src="/app/modules/tasks/controllers/tasks.create.client.controller.js"></script>
+<script src="/app/modules/tasks/controllers/tasks.list.client.controller.js"></script>
 
-<script src="modules/users/users.client.module.js"></script>
-<script src="modules/users/routes/users.client.routes.js"></script>
-<script src="modules/users/services/authentication.client.service.js"></script>
-<script src="modules/users/services/authentication.modal.client.service.js"></script>
-<script src="modules/users/controllers/login.modal.client.controller.js"></script>
-<script src="modules/users/controllers/recovery.modal.client.controller.js"></script>
-<script src="modules/users/controllers/signup.modal.client.controller.js"></script>
-<script src="modules/users/controllers/password-reset.client.controller.js"></script>
+<script src="/app/modules/users/users.client.module.js"></script>
+<script src="/app/modules/users/routes/users.client.routes.js"></script>
+<script src="/app/modules/users/services/authentication.client.service.js"></script>
+<script src="/app/modules/users/services/authentication.modal.client.service.js"></script>
+<script src="/app/modules/users/services/user.client.service.js"></script>
+<script src="/app/modules/users/controllers/login.modal.client.controller.js"></script>
+<script src="/app/modules/users/controllers/recovery.modal.client.controller.js"></script>
+<script src="/app/modules/users/controllers/signup.modal.client.controller.js"></script>
+<script src="/app/modules/users/controllers/password-reset.client.controller.js"></script>
+<script src="/app/modules/users/controllers/edit-user.client.controller.js"></script>
+<script src="/app/modules/users/controllers/validate-user.client.controller.js"></script>
 <!-- endbuild -->
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

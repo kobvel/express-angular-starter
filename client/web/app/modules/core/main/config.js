@@ -3,14 +3,16 @@
 // Init the application configuration module for AngularJS application
 /* exported ApplicationConfiguration */
 /* exported */
-var ApplicationConfiguration = (function () {
+const ApplicationConfiguration = (function () {
   // Init module configuration options
-  var applicationModuleName = 'meanweb';
-  var applicationModuleVendorDependencies = ['ui.router', 'ui.utils', 'ui.bootstrap',
-    'ngStorage', 'restangular', 'ngAnimate', 'angular-loading-bar'];
+  const applicationModuleName = 'meanweb';
+  const applicationModuleVendorDependencies = [
+    'ui.router', 'ui.utils', 'ui.bootstrap',
+    'ngStorage', 'restangular', 'ngAnimate', 'angular-loading-bar',
+  ];
 
   // Add a new vertical module
-  var registerModule = function (moduleName, dependencies) {
+  const registerModule = function (moduleName, dependencies) {
     // Create angular module
     angular.module(moduleName, dependencies || []);
 
@@ -19,9 +21,9 @@ var ApplicationConfiguration = (function () {
   };
 
   return {
-    applicationModuleName: applicationModuleName,
-    applicationModuleVendorDependencies: applicationModuleVendorDependencies,
-    registerModule: registerModule,
+    applicationModuleName,
+    applicationModuleVendorDependencies,
+    registerModule,
   };
 }());
 

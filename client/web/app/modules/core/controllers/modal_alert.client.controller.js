@@ -8,7 +8,7 @@
   ModalAlertController.$inject = ['$uibModalInstance', 'title', 'content'];
 
   function ModalAlertController($uibModalInstance, title, content) {
-    var vm = this;
+    const vm = this;
     vm.close = closeModal;
     vm.title = title;
     vm.content = content;

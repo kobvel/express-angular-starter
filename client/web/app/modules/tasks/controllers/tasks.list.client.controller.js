@@ -8,7 +8,7 @@
   ListTasksController.$inject = ['$rootScope', 'Tasks', 'Alert', 'Authentication'];
 
   function ListTasksController($rootScope, Tasks, Alert, Authentication) {
-    var vm = this;
+    const vm = this;
 
     activate();
 

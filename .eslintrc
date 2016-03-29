@@ -18,7 +18,11 @@
     request: true,
     by: true,
     element: true,
-    browser: true
+    browser: true,
+    jasmine: true,
+    inject: true,
+    angular: true,
+    ApplicationConfiguration: true,
   },
   "rules": {
     "semi" : [2, "always"],
@@ -32,6 +36,7 @@
     "arrow-body-style": 0,
     "no-empty-label": 0,
     "no-labels": 2,
-    "no-unused-vars": [2, { "args": "none" }]
+    "no-unused-vars": [2, { "args": "none" }],
+    "no-use-before-define": [2, { "functions": false, "classes": true }]
   }
 }

@@ -1,4 +1,4 @@
-import logger from './logger.js';
+import logger from '../logger.js';
 
 module.exports = {
   database: 'mean_relational_prod',
@@ -16,4 +16,12 @@ module.exports = {
   },
   jwtSecret: 'Mean-relational-AP1-prod',
   jwtSession: { session: false },
+  emailService: 'Gmail',
+  auth: {
+    user: '',
+    pass: '',
+  },
+  verifyEmail: true,
+  urlBaseClient: '',
+  urlBaseApi: '',
 };

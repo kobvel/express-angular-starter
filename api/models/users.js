@@ -37,6 +37,62 @@ module.exports = (sequelize, DataType) => {
         notEmpty: true,
       },
     },
+    emailValidate: {
+      type: DataType.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    picture: {
+      type: DataType.STRING,
+      allowNull: true,
+      defaultValue: null,
+    },
+    facebook: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    twitter: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    instagram: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    google: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    pinterest: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    tokenValidate: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    tokenPassRecovery: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    tokenPassRecoveryDate: {
+      type: DataType.DATE,
+      defaultValue: new Date(),
+    },
   }, {
     hooks: {
       beforeCreate: user => {

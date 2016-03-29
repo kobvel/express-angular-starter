@@ -8,12 +8,12 @@
   Seo.$inject = [];
 
   function Seo() {
-    var self = this;
-    var service = {
-      getTitle: getTitle,
-      setTitle: setTitle,
-      getDescription: getDescription,
-      setDescription: setDescription,
+    const self = this;
+    const service = {
+      getTitle,
+      setTitle,
+      getDescription,
+      setDescription,
     };
 
     self.title = 'Mean';

@@ -7,12 +7,18 @@ import browserSync from 'browser-sync';
 import del from 'del';
 import mocha from 'gulp-mocha';
 import {stream as wiredep} from 'wiredep';
+import runSequence from 'run-sequence';
 import modRewrite  from 'connect-modrewrite';
 import childProcess from 'child_process';
+import karma from 'karma';
+import gulpProtractor from 'gulp-protractor';
+import traceur from 'gulp-traceur-compiler';
 
-
-const $ = gulpLoadPlugins();
+const protractor = gulpProtractor.protractor;
+const webdriver_update = gulpProtractor.webdriver_update;
+const webdriver_standalone = gulpProtractor.webdriver_standalone;
 const reload = browserSync.reload;
+const $ = gulpLoadPlugins();
 
 gulp.task('styles', () => {
   return gulp.src('client/web/app/styles/*.scss')
@@ -39,60 +45,7 @@ function lint(files, options) {
   };
 }
 
-const lintOptionsClient = {
-  root: true,
-  extends : [
-    'airbnb/base'
-  ],
-  plugins : [
-    'flow-vars'
-  ],
-  env     : {
-    es6: false,
-    node: true,
-    mocha: true
-  },
-  globals: {
-    app: true,
-    expect: true,
-    request: true,
-    by: true,
-    element: true,
-    browser: true,
-    ApplicationConfiguration: true,
-    angular: true,
-  },
-  rules: {
-    semi : [2, 'always'],
-    'no-param-reassign': [2, {props: false}],
-    'func-names': 0,
-    'no-console': 0,
-    'one-var': 0,
-    'new-cap': 0,
-    'quote-props': 0,
-    'prefer-template': 0,
-    'arrow-body-style': 0,
-    'no-empty-label': 0,
-    'no-labels': 2,
-    'no-unused-vars': [2, { args: 'none', exported: 'ApplicationConfiguration' }],
-    'no-var': 0,
-    'no-use-before-define': 0,
-    'object-shorthand': 0,
-    'prefer-rest-params': 0,
-  }
-};
-
-
-const lintOptionsServer = {
-  env: {
-    mocha: true,
-    node:  true,
-    //es6:   true    
-  },
-  global: ['app', 'expect', 'request', 'by', 'element', 'browser']
-};
-
-gulp.task('api:lint', lint('api/**/**/*.js', lintOptionsServer));
+gulp.task('api:lint', lint('api/**/**/*.js'));
 
 //gulp lint has some bugs with the fix option
 gulp.task('api:lint:fix', (done) => {
@@ -101,7 +54,7 @@ gulp.task('api:lint:fix', (done) => {
   });
 });
 
-gulp.task('web:lint', lint('client/web/app/modules/**/*.js', lintOptionsClient));
+gulp.task('web:lint', lint('client/web/app/modules/**/*.js'));
 
 gulp.task('lint', ['api:lint', 'web:lint']);
 
@@ -110,6 +63,7 @@ gulp.task('html', ['styles'], () => {
 
   return gulp.src('client/web/app/*.html')
     .pipe(assets)
+    .pipe($.if('*.js', traceur()))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
     .pipe(assets.restore())
@@ -123,6 +77,7 @@ gulp.task('angulartemplates', ['styles'], () => {
 
   return gulp.src('client/web/app/modules/*/**/**/*.html')
     .pipe(assets)
+    .pipe($.if('*.js', traceur()))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
     .pipe(assets.restore())
@@ -179,12 +134,12 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     port: 9000,
     https: true,
     server: {
-      baseDir: ['.tmp', 'client/web/app'],
+      baseDir: ['.tmp', 'client/web/app', 'client/web'],
       middleware: [
           modRewrite([
-              '!\\.\\w+$ /index.html [L]'
+              '^[^\\.]*$ /index.html [L]'
           ])
-      ],      
+      ],
       routes: {
         '/bower_components': 'client/web/bower_components'
       }
@@ -195,10 +150,10 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     'client/web/app/*.html',
     'client/web/app/scripts/**/*.js',
     'client/web/app/images/**/*',
-    'app/modules/**/*.js',
-    'app/modules/**/*.html',    
+    'client/web/app/modules/**/*.js',
+    'client/web/app/modules/**/*.html',
     '.tmp/fonts/**/*'
-  ]).on('change', reload);
+  ]).on('change', () => gulp.start('web:lint'), reload);
 
   gulp.watch('client/web/app/styles/**/*.scss', ['styles']);
   gulp.watch('client/web/app/fonts/**/*', ['fonts']);
@@ -216,7 +171,7 @@ gulp.task('web:serve:dist', () => {
           modRewrite([
               '!\\.\\w+$ /index.html [L]'
           ])
-      ],      
+      ],
       baseDir: ['client/web/dist']
     }
   });
@@ -234,7 +189,7 @@ gulp.task('web:serve:test', () => {
           modRewrite([
               '!\\.\\w+$ /index.html [L]'
           ])
-      ],      
+      ],
       routes: {
         '/bower_components': 'client/web/bower_components'
       }
@@ -244,6 +199,48 @@ gulp.task('web:serve:test', () => {
   gulp.watch('client/web/test/spec/**/*.js').on('change', reload);
   gulp.watch('client/web/test/spec/**/*.js', ['lint:test']);
 });
+
+// Run karma tests
+gulp.task('web:test:karma', (done) => {
+  new karma.Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
+gulp.task('web:test:e2e', (done) => {
+  runSequence('env:test', 'protractor', done);
+});
+
+gulp.task('env:test', () => {
+  //process.env.NODE_ENV = 'test';
+});
+
+// Protractor test runner task
+gulp.task('protractor', ['webdriver_update'], () => {
+  gulp.src([])
+    .pipe(protractor({
+      configFile: __dirname + '/protractor.conf.js'
+    }))
+    .on('end', () => {
+      console.log('E2E Testing complete');
+      // exit with success.
+      process.exit(0);
+    })
+    .on('error', (err) => {
+      console.log('E2E Tests failed');
+      process.exit(1);
+    });
+});
+
+// Downloads the selenium webdriver
+gulp.task('webdriver_update', webdriver_update);
+
+
+// Start the standalone selenium server
+// NOTE: This is not needed if you reference the
+// seleniumServerJar in your protractor.conf.js
+gulp.task('webdriver_standalone', webdriver_standalone);
 
 // inject bower components
 gulp.task('wiredep', () => {
@@ -261,7 +258,7 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('client/web/app'));
 });
 
-gulp.task('build', ['lint', 'angulartemplates', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['web:lint', 'angulartemplates', 'html', 'images', 'fonts', 'extras'], () => {
   return gulp.src('client/web/dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
@@ -270,17 +267,17 @@ gulp.task('build', ['lint', 'angulartemplates', 'html', 'images', 'fonts', 'extr
  *
  * API
  *
- * 
+ *
  */
 
 gulp.task('api:serve', ['api:lint'],() => {
-  gulpNodemon({ 
+  gulpNodemon({
     script: 'api/start.js',
   });
 });
 
 gulp.task('api:cluster', ['api:lint'],() => {
-  gulpNodemon({ 
+  gulpNodemon({
     script: 'api/start_clusters.js',
   });
 });

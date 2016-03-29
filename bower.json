@@ -1,5 +1,5 @@
 {
-  "name": "homeswitch",
+  "name": "mean",
   "private": true,
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
@@ -12,7 +12,8 @@
     "restangular": "https://github.com/sssilver/restangular.git#master",
     "fastclick": "~1.0.6",
     "angular-loading-bar": "^0.8.0",
-    "angular-animate": "^1.5.0"
+    "angular-animate": "^1.5.0",
+    "satellizer": "^0.14.0"
   },
   "overrides": {
     "bootstrap-sass": {
@@ -25,6 +26,10 @@
   },
   "devDependencies": {
     "chai": "~3.4.2",
-    "mocha": "~2.3.4"
+    "mocha": "~2.3.4",
+    "angular-mocks": "^1.5.2"
+  },
+  "resolutions": {
+    "angular": "^1.5"
   }
 }

@@ -11,7 +11,7 @@
 
   function PasswordRecoveryController($uibModalInstance,
     Authentication, Alert, AuthenticationModal) {
-    var vm = this;
+    const vm = this;
 
     // User credentials (email)
     vm.credentials = {
@@ -50,11 +50,11 @@
         // Clear error message
         vm.messages.error = null;
         // Write success message
-        vm.messages.success = message;
+        vm.messages.success = 'Please check your email';
         // Close recovery modal (this)
         $uibModalInstance.dismiss();
         // Open alert modal with success text, and after close go to login
-        Alert.display('Succes', message).result
+        Alert.display('Success', 'Please check your email').result
           .then(AuthenticationModal.openLogin)
           .catch(AuthenticationModal.openLogin);
       }
@@ -75,10 +75,10 @@
      */
     function isValidData(field) {
       // validation result
-      var res = true;
+      let res = true;
 
       // Email validation
-      var regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       // Clear global error message
       vm.messages.error = null;

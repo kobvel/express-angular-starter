@@ -12,4 +12,12 @@ module.exports = {
   },
   jwtSecret: 'Mean-relational-test',
   jwtSession: { session: false },
+  emailService: 'Gmail',
+  auth: {
+    user: '',
+    pass: '',
+  },
+  verifyEmail: false,
+  urlBaseClient: 'https://localhost:9000',
+  urlBaseApi: 'https://localhost:3000',
 };

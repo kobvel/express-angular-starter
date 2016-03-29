@@ -8,8 +8,14 @@ describe('Routes: Token', () => {
           name: 'John',
           email: 'john@mail.net',
           password: '12345',
+          emailValidate: 1,
         }))
-        .then(done());
+        .then(user => {
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
     });
     describe('status 200', () => {
       it('returns authenticated user token', done => {

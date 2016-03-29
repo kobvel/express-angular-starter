@@ -6,12 +6,9 @@
     .controller('SignupController', SignupController);
 
   SignupController
-  .$inject = ['$timeout',
-              '$state',
-              '$uibModalInstance',
-              'AuthenticationModal',
-              'Authentication',
-              'Alert'];
+  .$inject = [
+    '$timeout', '$state', '$uibModalInstance', 'AuthenticationModal', 'Authentication', 'Alert',
+  ];
 
   function SignupController($timeout,
                             $state,
@@ -19,7 +16,7 @@
                             AuthenticationModal,
                             Authentication,
                             Alert) {
-    var vm = this;
+    const vm = this;
     // signup button status
     vm.enabled = true;
     // User credentials
@@ -62,36 +59,8 @@
         .catch(signupFailed);
 
       function signupCompleted(userParam) {
-        // Do automatic login
-        var user = {
-          email: vm.credentials.email,
-          password: vm.credentials.password,
-        };
-
         // Success message
-        vm.messages.success = 'Account created. Automatic login into your account';
-
-        // Try to login new user
-        Authentication.login(user)
-          .then(loginCompleted)
-          .catch(loginFailed);
-
-        // If login failed alert an error
-        function loginFailed(err) {
-          var message = '';
-          message += 'An error occurred when try to login ';
-          message += 'into your account, please try manually';
-
-          Alert
-            .display('Error', message)
-            .result
-            .then(AuthenticationModal.openLogin)
-            .catch(AuthenticationModal.openLogin);
-        }
-
-        // When login completed close signup modal
-        function loginCompleted() {
-        }
+        vm.messages.success = 'Account created. Please check your email and validate.';
       }
 
       // When signup fail alert errros
@@ -108,10 +77,10 @@
      */
     function isValidData(field) {
       // validation result
-      var res = true;
-      // Email validation
-      var regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      let res = true;
 
+      // Email validation
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       // Clear global error message
       vm.messages.error = null;

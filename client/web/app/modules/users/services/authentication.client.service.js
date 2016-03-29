@@ -6,18 +6,19 @@
     .module('users')
     .factory('Authentication', Authentication);
 
-  Authentication.$inject = ['$rootScope', '$state', '$localStorage', 'MEANRestangular'];
+  Authentication.$inject = ['$rootScope', '$state', '$auth', '$localStorage', 'MEANRestangular'];
 
-  function Authentication($rootScope, $state, $localStorage, MEANRestangular) {
-    var auth = {
+  function Authentication($rootScope, $state, $auth, $localStorage, MEANRestangular) {
+    const auth = {
       user: $localStorage.user,
-      login: login,
-      logout: logout,
-      signup: signup,
-      forgot: forgot,
-      reset: reset,
-      token: token,
-      getToken: getToken,
+      login,
+      logout,
+      signup,
+      forgot,
+      reset,
+      token,
+      getToken,
+      authenticate,
     };
 
     updateHeader();
@@ -28,24 +29,48 @@
 
     function updateHeader() {
       // Update previous headers
-      var headers = MEANRestangular.defaultHeaders;
+      const headers = MEANRestangular.defaultHeaders;
       if ($localStorage.token) {
         headers.Authorization = 'JWT ' + $localStorage.token;
         // Set default headers
         MEANRestangular.setDefaultHeaders(headers);
       }
+      delete localStorage.satellizer_token;
     }
 
     function removeHeader() {
       // Update previous headers
-      var headers = MEANRestangular.defaultHeaders;
+      const headers = MEANRestangular.defaultHeaders;
       headers.Authorization = undefined;
       // Set default headers
       MEANRestangular.setDefaultHeaders(headers);
+      delete localStorage.satellizer_token;
     }
 
     function getToken() {
       return $localStorage.token;
+    }
+
+    /*
+     * Social network authenticate
+     */
+    function authenticate(provider) {
+      return $auth.authenticate(provider)
+      .then((response) => {
+        auth.user = response.data.user;
+        $localStorage.user = response.data.user;
+        $localStorage.token = response.data.token;
+        updateHeader();
+
+        // broadcast user logged message and user data
+        $rootScope.$broadcast('user-login', response.data.user);
+        // $uibModalInstance.close();
+        return Authentication.user;
+      })
+      .catch((err) => {
+        console.log('err ', err);
+        throw err;
+      });
     }
 
     /**
@@ -115,7 +140,7 @@
      * param credentials : object {email: example@domain.name}
      */
     function forgot(credentials) {
-      return MEANRestangular.one('auth').post('forgot', credentials)
+      return MEANRestangular.one('users').post('forgot', credentials)
         .then(forgotCompleted)
         .catch(forgotFailed);
 
@@ -134,7 +159,7 @@
      * param credentials : object {password: password}
      */
     function reset(paramToken, credentials) {
-      return MEANRestangular.one('auth', 'reset').post(paramToken, credentials)
+      return MEANRestangular.one('users/reset', 'password').post(paramToken, credentials)
         .then(resetCompleted)
         .catch(resetFailed);
 
@@ -152,7 +177,7 @@
      * param token: token to validate
      */
     function token(paramToken) {
-      return MEANRestangular.one('auth', 'reset').customGET(paramToken)
+      return MEANRestangular.one('users/reset', 'validate').customGET(paramToken)
         .then(validateCompleted)
         .catch(validateFailed);
 

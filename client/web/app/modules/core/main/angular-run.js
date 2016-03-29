@@ -12,8 +12,8 @@
     $rootScope.$on('$stateChangeStart', checkPermissions);
 
     function checkPermissions(event, toState, toParams, fromState, fromParams) {
-      var allowed = false;
-      var index = 0;
+      let allowed = false;
+      let index = 0;
 
       if (toState.data && toState.data.roles && toState.data.roles.length > 0) {
         while (!allowed && index < toState.data.roles.length) {

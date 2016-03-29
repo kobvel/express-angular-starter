@@ -34,7 +34,9 @@ module.exports = app => {
       const password = req.body.password;
       app.services.tokens.signin(email, password)
         .then(response => res.json(response))
-        .catch(error => res.sendStatus(401));
+        .catch(error => {
+          res.sendStatus(401);
+        });
     } else {
       res.sendStatus(401);
     }

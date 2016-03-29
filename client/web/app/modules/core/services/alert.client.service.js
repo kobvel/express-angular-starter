@@ -8,23 +8,23 @@
   Alert.$inject = ['$uibModal'];
 
   function Alert($uibModal) {
-    var service = {
-      display: display,
-      confirm: confirm,
+    const service = {
+      display,
+      confirm,
     };
     return service;
 
     function display(title, content) {
-      var modalInstance = $uibModal.open({
+      const modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'modules/core/templates/modal_alert.client.template.html',
         windowClass: 'hs-modal',
         controller: 'ModalAlertController as mac',
         resolve: {
-          title: function () {
+          title: () => {
             return title;
           },
-          content: function () {
+          content: () => {
             return content;
           },
         },
@@ -34,19 +34,19 @@
     }
 
     function confirm(title, content, callback) {
-      var modalInstance = $uibModal.open({
+      const modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'modules/core/templates/modal_confirm.client.template.html',
         windowClass: 'hs-modal',
         controller: 'ModalConfirmController as mcc',
         resolve: {
-          title: function () {
+          title: () => {
             return title;
           },
-          content: function () {
+          content: () => {
             return content;
           },
-          callback: function () {
+          callback: () => {
             return callback;
           },
         },

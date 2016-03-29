@@ -8,7 +8,7 @@
   ModalConfirmController.$inject = ['$uibModalInstance', 'title', 'content', 'callback'];
 
   function ModalConfirmController($uibModalInstance, title, content, callback) {
-    var vm = this;
+    const vm = this;
     vm.close = closeModal;
     vm.title = title;
     vm.content = content;

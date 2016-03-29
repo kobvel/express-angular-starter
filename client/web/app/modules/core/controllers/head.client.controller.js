@@ -8,7 +8,7 @@
   HeadController.$inject = ['Seo'];
 
   function HeadController(Seo) {
-    var vm = this;
+    const vm = this;
     vm.Seo = Seo;
   }
 }());

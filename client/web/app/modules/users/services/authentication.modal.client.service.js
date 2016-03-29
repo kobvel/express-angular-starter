@@ -9,10 +9,10 @@
   AuthenticationModal.$inject = ['$uibModal'];
 
   function AuthenticationModal($uibModal) {
-    var authM = {
-      openLogin: openLogin,
-      openSignup: openSignup,
-      openRecovery: openRecovery,
+    const authM = {
+      openLogin,
+      openSignup,
+      openRecovery,
     };
 
     return authM;
@@ -23,7 +23,7 @@
      * Open login modal
      */
     function openLogin() {
-      var modalInstance = $uibModal.open({
+      const modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'modules/users/templates/login.modal.template.html',
         windowClass: 'hs-modal',
@@ -36,7 +36,7 @@
      * Open signup modal
      */
     function openSignup() {
-      var modalInstance = $uibModal.open({
+      const modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'modules/users/templates/signup.modal.template.html',
         windowClass: 'hs-modal',
@@ -49,7 +49,7 @@
      * Open recovery modal
      */
     function openRecovery() {
-      var modalInstance = $uibModal.open({
+      const modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'modules/users/templates/recovery.modal.template.html',
         windowClass: 'hs-modal',
