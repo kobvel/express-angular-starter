@@ -42,6 +42,41 @@ module.exports = (sequelize, DataType) => {
       allowNull: false,
       defaultValue: false,
     },
+    picture: {
+      type: DataType.STRING,
+      allowNull: true,
+      defaultValue: null,
+    },
+    facebook: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    twitter: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    instagram: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    google: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
+    pinterest: {
+      type: DataType.STRING,
+      unique: true,
+      allowNull: true,
+      defaultValue: null,
+    },
     tokenValidate: {
       type: DataType.STRING,
       unique: true,

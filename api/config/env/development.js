@@ -24,4 +24,11 @@ module.exports = {
   verifyEmail: false,
   urlBaseClient: 'https://localhost:9000',
   urlBaseApi: 'https://localhost:3000',
+  FACEBOOK_SECRET: '', // Facebook secret API
+  TWITTER_KEY: '',
+  TWITTER_SECRET: '',
+  INSTAGRAM_SECRET: '',
+  GOOGLE_SECRET: '',
+  PINTEREST_SECRET: '',
+  PINTEREST_KEY: '',
 };

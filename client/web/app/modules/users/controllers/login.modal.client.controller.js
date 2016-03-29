@@ -5,11 +5,11 @@
     .module('users')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$state', '$uibModalInstance', '$localStorage',
-    'Authentication', 'AuthenticationModal'];
+  LoginController.$inject = ['$uibModalInstance', '$localStorage', '$auth',
+    'Authentication', 'AuthenticationModal', 'MEANRestangular'];
 
-  function LoginController($state, $uibModalInstance, $localStorage,
-    Authentication, AuthenticationModal) {
+  function LoginController($uibModalInstance, $localStorage, $auth,
+    Authentication, AuthenticationModal, MEANRestangular) {
     const vm = this;
     // signup button status
     vm.enabled = true;
@@ -29,6 +29,17 @@
     vm.openSignup = openSignup;
     vm.openRecovery = openRecovery;
     vm.isValidData = isValidData;
+    vm.authenticate = authenticate;
+
+    function authenticate(provider) {
+      Authentication.authenticate(provider)
+      .then((response) => {
+        $uibModalInstance.close();
+      })
+      .catch((err) => {
+        vm.messages.error = err.data.msg;
+      });
+    }
 
     /**
      * Try to login

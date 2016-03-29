@@ -4,7 +4,7 @@ module.exports = app => {
    * ACL configuration
    */
   app.acl.allow([{
-    roles: ['user'],
+    roles: ['user', 'admin'],
     allows: [{
       resources: '/api/v1/users/me',
       permissions: ['get', 'delete'],
@@ -28,6 +28,26 @@ module.exports = app => {
       permissions: ['get'],
     },
     {
+      resources: '/api/v1/auth/facebook',
+      permissions: ['post'],
+    },
+    {
+      resources: '/api/v1/auth/twitter',
+      permissions: ['post'],
+    },
+    {
+      resources: '/api/v1/auth/instagram',
+      permissions: ['post'],
+    },
+    {
+      resources: '/api/v1/auth/google',
+      permissions: ['post'],
+    },
+    {
+      resources: '/api/v1/auth/pinterest',
+      permissions: ['post'],
+    },
+    {
       resources: '/api/v1/users/reset/password/:token',
       permissions: ['post'],
     },
@@ -36,7 +56,7 @@ module.exports = app => {
       permissions: ['get'],
     }],
   }, {
-    roles: ['user'],
+    roles: ['user', 'admin'],
     allows: [{
       resources: '/api/v1/users/me',
       permissions: ['put'],
@@ -237,7 +257,8 @@ module.exports = app => {
    *      "newPassword": "abc",
    *      "verifyPassword": "abc"
    *    }
-   * @apiSuccess {Number} 1 if operation was success
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
    * @apiSuccessExample {json} Success
    *    HTTP/1.1 200 OK
    *    {
@@ -248,6 +269,165 @@ module.exports = app => {
    */
   app.post('/api/v1/users/reset/password/:token', app.acl.checkRoles, (req, res) => {
     app.services.users.resetPassword(req.params.token, req.body.newPassword)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user (Facebook)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx"
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/auth/facebook', app.acl.checkRoles, (req, res) => {
+    app.services.social.facebook(req.body.code, req.body.clientId,
+    req.body.redirectUri)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user (Twitter)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx"
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/auth/twitter', app.acl.checkRoles, (req, res) => {
+    app.services.social.twitter(req.body)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user (Instagram)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx"
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/auth/instagram', app.acl.checkRoles, (req, res) => {
+    app.services.social.instagram(req.body.code, req.body.clientId,
+    req.body.redirectUri)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user (Google)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx"
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/auth/google', app.acl.checkRoles, (req, res) => {
+    app.services.social.google(req.body.code, req.body.clientId,
+    req.body.redirectUri)
+      .then(result => res.json(result))
+      .catch(error => {
+        res.status(412).json({ msg: error.message });
+      });
+  });
+
+  /**
+   * @api {post} /users Register a new user (Pinterest)
+   * @apiGroup User
+   * @apiParam {String} code
+   * @apiParam {String} clientId
+   * @apiParam {String} redirectUri
+   * @apiParamExample {json} Input
+   *    {
+   *      "code": "abc",
+   *      "clientId": "abc",
+   *      "redirectUri": "http://redirect"
+   *    }
+   * @apiSuccess {Object} user
+   * @apiSuccess {String} token
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   *    {
+   *      "user": { "name" : "John", "id": 1 },
+   *      "token": "abczyx"
+   *    }
+   * @apiErrorExample {json} Register error
+   *    HTTP/1.1 412 Precondition Failed
+   */
+  app.post('/api/v1/auth/pinterest', app.acl.checkRoles, (req, res) => {
+    app.services.social.pinterest(req.body.code, req.body.clientId,
+    req.body.redirectUri)
       .then(result => res.json(result))
       .catch(error => {
         res.status(412).json({ msg: error.message });
