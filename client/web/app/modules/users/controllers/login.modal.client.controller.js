@@ -5,10 +5,10 @@
     .module('users')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$rootScope', '$state', '$uibModalInstance', '$localStorage', '$auth',
+  LoginController.$inject = ['$uibModalInstance', '$localStorage', '$auth',
     'Authentication', 'AuthenticationModal', 'MEANRestangular'];
 
-  function LoginController($rootScope, $state, $uibModalInstance, $localStorage, $auth,
+  function LoginController($uibModalInstance, $localStorage, $auth,
     Authentication, AuthenticationModal, MEANRestangular) {
     const vm = this;
     // signup button status
