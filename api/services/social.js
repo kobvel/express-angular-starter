@@ -272,49 +272,53 @@ module.exports = app => {
     };
     request.post(accessTokenUrl, { form: params, json: true },
     (errToken, responseToken, tokenReturn) => {
-      const accessToken = tokenReturn.access_token;
-      const headers = { Authorization: 'Bearer ' + accessToken };
-      request.get({ url: peopleApiUrl, headers, json: true },
-      (errAuth, responseAuth, profile) => {
-        if (errAuth) {
-          deferred.reject({ err: errAuth });
-        } else {
-          const query = { where: { pinterest: profile.data.id } };
-          Users.findOne(query)
-          .then((existingUser) => {
-            if (existingUser) {
-              const token = createJWT(existingUser);
-              deferred.resolve({
-                user: {
-                  id: existingUser.dataValues.id,
-                  name: existingUser.name,
-                },
-                token,
-              });
-            } else {
-              const user = {};
-              const salt = bcrypt.genSaltSync();
-              user.password = bcrypt.hashSync(salt, salt);
-              user.pinterest = profile.data.id;
-              user.emailValidate = 1;
-              user.email = profile.data.username + '@pinterest.com';
-              user.picture = profile.data.image['60x60'].url;
-              user.name = profile.data.first_name + ' ' + profile.data.last_name;
-              Users.create(user)
-              .then((data) => {
-                const token = createJWT(user);
+      if (tokenReturn.status === 'failure') {
+        deferred.reject({ message: tokenReturn.message });
+      } else {
+        const accessToken = tokenReturn.access_token;
+        const headers = { Authorization: 'Bearer ' + accessToken };
+        request.get({ url: peopleApiUrl, headers, json: true },
+        (errAuth, responseAuth, profile) => {
+          if (profile.message) {
+            deferred.reject({ message: profile.message });
+          } else {
+            const query = { where: { pinterest: profile.data.id } };
+            Users.findOne(query)
+            .then((existingUser) => {
+              if (existingUser) {
+                const token = createJWT(existingUser);
                 deferred.resolve({
                   user: {
-                    id: data.dataValues.id,
-                    name: user.name,
+                    id: existingUser.dataValues.id,
+                    name: existingUser.name,
                   },
                   token,
                 });
-              });
-            }
-          });
-        }
-      });
+              } else {
+                const user = {};
+                const salt = bcrypt.genSaltSync();
+                user.password = bcrypt.hashSync(salt, salt);
+                user.pinterest = profile.data.id;
+                user.emailValidate = 1;
+                user.email = profile.data.username + '@pinterest.com';
+                user.picture = profile.data.image['60x60'].url;
+                user.name = profile.data.first_name + ' ' + profile.data.last_name;
+                Users.create(user)
+                .then((data) => {
+                  const token = createJWT(user);
+                  deferred.resolve({
+                    user: {
+                      id: data.dataValues.id,
+                      name: user.name,
+                    },
+                    token,
+                  });
+                });
+              }
+            });
+          }
+        });
+      }
     });
     return deferred.promise;
   };
