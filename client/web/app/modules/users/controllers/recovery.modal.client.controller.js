@@ -47,16 +47,28 @@
 
       // if login completed close modal, go to booking list
       function forgotCompleted(message) {
-        // Clear error message
-        vm.messages.error = null;
-        // Write success message
-        vm.messages.success = 'Please check your email';
-        // Close recovery modal (this)
-        $uibModalInstance.dismiss();
-        // Open alert modal with success text, and after close go to login
-        Alert.display('Success', 'Please check your email').result
-          .then(AuthenticationModal.openLogin)
-          .catch(AuthenticationModal.openLogin);
+        if (message.errorMessage) {
+          Alert.display('Error', message.errorMessage).result
+            .then(AuthenticationModal.openLogin)
+            .catch(AuthenticationModal.openLogin);
+
+          vm.enabled = true;
+          // Clear success message
+          vm.messages.success = null;
+          // Write error message
+          vm.messages.error = message.errorMessage;
+        } else {
+          // Clear error message
+          vm.messages.error = null;
+          // Write success message
+          vm.messages.success = 'Please check your email';
+          // Close recovery modal (this)
+          $uibModalInstance.dismiss();
+          // Open alert modal with success text, and after close go to login
+          Alert.display('Success', 'Please check your email').result
+            .then(AuthenticationModal.openLogin)
+            .catch(AuthenticationModal.openLogin);
+        }
       }
 
       // show error if login failed
