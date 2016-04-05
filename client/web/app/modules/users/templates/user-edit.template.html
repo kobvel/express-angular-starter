@@ -8,4 +8,10 @@
   <div>
     <input type="submit">
   </div>
+  <div id="errorMessage" data-ng-show="uec.messages.error" class="text-center text-danger">
+    <strong data-ng-bind="uec.messages.error"></strong>
+  </div>
+  <div id="successMessage" data-ng-show="uec.messages.success" class="text-center text-success">
+    <strong data-ng-bind="uec.messages.success"></strong>
+  </div>
 </form>

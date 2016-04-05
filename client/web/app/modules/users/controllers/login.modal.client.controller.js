@@ -37,7 +37,7 @@
         $uibModalInstance.close();
       })
       .catch((err) => {
-        vm.messages.error = err.data.msg;
+        vm.messages.error = err.msg;
       });
     }
 
@@ -68,7 +68,7 @@
         // re enable login
         vm.enabled = true;
         // show error
-        vm.messages.error = err;
+        vm.messages.error = err.data.msg;
       }
     }
 
