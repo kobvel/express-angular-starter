@@ -78,7 +78,7 @@
         // Clear success message
         vm.messages.success = null;
         // Write error message
-        vm.messages.error = err.message;
+        vm.messages.error = err.msg;
       }
     }
 
