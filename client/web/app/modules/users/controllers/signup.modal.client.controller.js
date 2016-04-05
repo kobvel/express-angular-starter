@@ -66,7 +66,7 @@
       // When signup fail alert errros
       function signupFailed(err) {
         vm.error = err.data;
-        vm.messages.error = vm.error.message;
+        vm.messages.error = vm.error.msg;
         // enable signup
         vm.enabled = true;
       }
