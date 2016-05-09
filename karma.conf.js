@@ -30,6 +30,7 @@ module.exports = function(config) {
       'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-loading-bar/build/loading-bar.js',
+      'bower_components/satellizer/satellizer.js',
       // app
       'app/modules/core/main/config.js',
       'app/modules/core/main/init.js',
