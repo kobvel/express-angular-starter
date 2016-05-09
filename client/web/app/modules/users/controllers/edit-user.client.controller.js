@@ -33,16 +33,16 @@
 
     function edit() {
       Users.edit(Authentication.user.id, vm.user)
-        .then(successCreate)
-        .catch(failedCreate);
+        .then(successEdit)
+        .catch(failedEdit);
 
-      function successCreate(user) {
-        Alert.display('Success', 'Success');
+      function successEdit(user) {
+        Alert.display('Success', 'Edit Success');
         Authentication.user = vm.user;
       }
 
-      function failedCreate(err) {
-        Alert.display('Error', err);
+      function failedEdit(err) {
+        Alert.display('Error', err.msg);
       }
     }
   }
