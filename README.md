@@ -10,15 +10,16 @@ A boilerplate using NodeJs, Express, Sequelize, Apidoc, Eslint, Mocha, Cluster a
 3. `gulp`
 4. Visit `https://localhost:9000`
 
-## Some command
+## Some commands
 
 ```
-gulp             # run api and web
-gulp web:serve   # run just web server
-gulp api:serve   # run just api server
-gulp api:tests   # run mocha tests
-gulp web:tests   # run karma tests
-gulp api:docs    # Generate the apidoc
+gulp                  # run api and web
+gulp web:serve        # run just web server
+gulp api:serve        # run just api server
+gulp api:tests        # run mocha tests
+gulp web:test:karma   # run karma tests
+gulp web:test:e2e     # run end-to-end tests
+gulp api:docs         # Generate the apidoc
 docker-compose build                        # build docker image
 docker-compose run meannode1 gulp api:tests # run api tests on docker
 docker-compose run meannode1 gulp web:tests # run web tests on docker
@@ -35,7 +36,7 @@ You can configure it in the `.eslintrc` file.
 
 The architecture is MVR (Model View Route)
 
-The API files are structured in the following manner:
+The API files are structured as follows:
 ```
 libs        (Configurations files and libs)
 models      (Sequelize models)
@@ -50,4 +51,4 @@ If you want to have a better understanding of the architecture, I recommend you 
 
 ## Credit
 
-This project is base on [node-express-sequelize-es2015](https://github.com/ArnaudValensi/node-express-sequelize-es2015)
+This project is based on [node-express-sequelize-es2015](https://github.com/ArnaudValensi/node-express-sequelize-es2015)

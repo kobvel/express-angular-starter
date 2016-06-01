@@ -45,7 +45,10 @@ module.exports = app => {
     const user = {};
     user.tokenPassRecovery = bcrypt.genSaltSync().replace(/[^a-zA-Z0-9-_]/g, '');
     user.tokenPassRecoveryDate = new Date();
-    return Users.update(user, query).then(() => {
+    return Users.update(user, query).then((res) => {
+      if (res[0] === 0) {
+        return { errorMessage: 'User not registered.' };
+      }
       return {
         token: user.tokenPassRecovery,
       };

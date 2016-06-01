@@ -35,10 +35,10 @@ module.exports = app => {
       app.services.tokens.signin(email, password)
         .then(response => res.json(response))
         .catch(error => {
-          res.sendStatus(401);
+          res.status(401).json({ msg: 'Incorrect Credentials' });
         });
     } else {
-      res.sendStatus(401);
+      res.status(401).json({ msg: 'Incomplete Credentials' });
     }
   });
 };
