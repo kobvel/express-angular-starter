@@ -5,6 +5,8 @@ client/web/dist
 *.sqlite
 .tmp
 logs
+coverage
+coverage/
 
 # osx
 .DS_Store
