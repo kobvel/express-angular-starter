@@ -10,7 +10,7 @@
     "lint": "eslint client/web/app/modules",
     "lint:fix": "npm run lint -- --fix",
     "test": "NODE_ENV=test mocha api/tests/**/*.js  --require api/tests/helpers --compilers js:babel-register --reporter spec",
-    "coverage": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha api/tests/**/*.js -- --require api/tests/helpers" ,
+    "coverage": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha api/tests/**/*.js -- --require api/tests/helpers",
     "apidoc": "apidoc -i api/routes/ -o client/web/dist/apidoc",
     "deploy": "better-npm-run deploy"
   },
@@ -47,6 +47,7 @@
     "express": "^4.13.4",
     "helmet": "^1.1.0",
     "jwt-simple": "^0.4.1",
+    "mongoose": "^4.5.9",
     "morgan": "^1.6.1",
     "nodemailer": "^2.3.0",
     "passport": "^0.3.2",
