@@ -6,9 +6,12 @@
     .module('users')
     .factory('Authentication', Authentication);
 
-  Authentication.$inject = ['$rootScope', '$state', '$auth', '$localStorage', 'MEANRestangular'];
+  Authentication.$inject = ['$rootScope', '$state', '$auth', '$localStorage', '$http',
+  '$configuration'];
 
-  function Authentication($rootScope, $state, $auth, $localStorage, MEANRestangular) {
+  function Authentication($rootScope, $state, $auth, $localStorage, $http,
+  $configuration) {
+    const apiUrl = $configuration.baseUrlApi;
     const auth = {
       user: $localStorage.user,
       login,
@@ -29,21 +32,16 @@
 
     function updateHeader() {
       // Update previous headers
-      const headers = MEANRestangular.defaultHeaders;
       if ($localStorage.token) {
-        headers.Authorization = 'JWT ' + $localStorage.token;
         // Set default headers
-        MEANRestangular.setDefaultHeaders(headers);
+        $http.defaults.headers.common.Authorization = 'JWT ' + $localStorage.token;
       }
       delete localStorage.satellizer_token;
     }
 
     function removeHeader() {
       // Update previous headers
-      const headers = MEANRestangular.defaultHeaders;
-      headers.Authorization = undefined;
-      // Set default headers
-      MEANRestangular.setDefaultHeaders(headers);
+      $http.defaults.headers.common.Authorization = undefined;
       delete localStorage.satellizer_token;
     }
 
@@ -78,20 +76,20 @@
      * param credentials: {email: user_email, password: user_password}
      */
     function login(credentials) {
-      return MEANRestangular.all('token').post(credentials)
+      return $http.post(apiUrl + 'token', credentials)
         .then(loginCompleted)
         .catch(loginFailed);
 
       function loginCompleted(response) {
-        auth.user = response.user;
-        $localStorage.user = response.user;
-        $localStorage.token = response.token;
+        auth.user = response.data.user;
+        $localStorage.user = response.data.user;
+        $localStorage.token = response.data.token;
         updateHeader();
 
         // broadcast user logged message and user data
-        $rootScope.$broadcast('user-login', response.user);
+        $rootScope.$broadcast('user-login', response.data.user);
 
-        return response.user;
+        return response.data.user;
       }
 
       function loginFailed(err) {
@@ -122,7 +120,7 @@
      * param credentials: {firstName, lastName, email, password, ...}
      */
     function signup(credentials) {
-      return MEANRestangular.all('users').post(credentials)
+      return $http.post(apiUrl + 'users', credentials)
         .then(signupCompleted)
         .catch(signupFailed);
 
@@ -140,7 +138,7 @@
      * param credentials : object {email: example@domain.name}
      */
     function forgot(credentials) {
-      return MEANRestangular.one('users').post('forgot', credentials)
+      return $http.post(apiUrl + 'users/forgot', credentials)
         .then(forgotCompleted)
         .catch(forgotFailed);
 
@@ -159,7 +157,7 @@
      * param credentials : object {password: password}
      */
     function reset(paramToken, credentials) {
-      return MEANRestangular.one('users/reset', 'password').post(paramToken, credentials)
+      return $http.post(apiUrl + 'users/reset/password/' + paramToken, credentials)
         .then(resetCompleted)
         .catch(resetFailed);
 
@@ -177,7 +175,7 @@
      * param token: token to validate
      */
     function token(paramToken) {
-      return MEANRestangular.one('users/reset', 'validate').customGET(paramToken)
+      return $http.get(apiUrl + 'users/reset/validate/' + paramToken)
         .then(validateCompleted)
         .catch(validateFailed);
 

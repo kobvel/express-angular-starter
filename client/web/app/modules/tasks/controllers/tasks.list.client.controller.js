@@ -10,7 +10,9 @@
   function ListTasksController($rootScope, Tasks, Alert, Authentication) {
     const vm = this;
 
-    activate();
+    vm.activate = activate;
+
+    vm.activate();
 
     $rootScope.$on('user-login', activate);
     $rootScope.$on('user-logout', cleanTasks);
@@ -25,7 +27,7 @@
       }
 
       function successResponse(tasks) {
-        vm.tasks = tasks;
+        vm.tasks = tasks.data;
       }
 
       function failedResponse(err) {
