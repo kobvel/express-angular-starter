@@ -5,9 +5,10 @@
       .module('core')
       .factory('Tasks', Tasks);
 
-  Tasks.$inject = ['$http', 'MEANRestangular'];
+  Tasks.$inject = ['$http', '$configuration'];
 
-  function Tasks($http, MEANRestangular) {
+  function Tasks($http, $configuration) {
+    const apiUrl = $configuration.baseUrlApi;
     const service = {
       create,
       getAll,
@@ -15,7 +16,7 @@
     return service;
 
     function create(task) {
-      return MEANRestangular.all('tasks').post(task);
+      return $http.post(apiUrl + 'tasks', task);
     }
 
     /**
@@ -23,7 +24,7 @@
      * return MEANRestangular.all('tasks').getList();
      */
     function getAll(config) {
-      return $http.get('https://localhost:3000/api/v1/tasks/', config);
+      return $http.get(apiUrl + 'tasks', config);
     }
   }
 }());

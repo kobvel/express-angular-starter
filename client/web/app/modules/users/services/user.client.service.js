@@ -5,9 +5,10 @@
       .module('users')
       .factory('Users', Users);
 
-  Users.$inject = ['MEANRestangular'];
+  Users.$inject = ['$http', '$configuration'];
 
-  function Users(MEANRestangular) {
+  function Users($http, $configuration) {
+    const apiUrl = $configuration.baseUrlApi;
     const service = {
       edit,
       me,
@@ -16,12 +17,12 @@
     return service;
 
     function edit(id, user) {
-      return MEANRestangular.one('users/me').customPUT(user)
+      return $http.put(apiUrl + 'users/me', user)
         .then(updateCompleted)
         .catch(updateFailed);
 
       function updateCompleted(response) {
-        return response;
+        return response.data;
       }
 
       function updateFailed(err) {
@@ -31,12 +32,12 @@
     }
 
     function me() {
-      return MEANRestangular.one('users/me').get()
+      return $http.get(apiUrl + 'users/me')
         .then(updateCompleted)
         .catch(updateFailed);
 
       function updateCompleted(response) {
-        return response;
+        return response.data;
       }
 
       function updateFailed(err) {
@@ -46,12 +47,12 @@
     }
 
     function validate(id) {
-      return MEANRestangular.one('users/validate', id).get()
+      return $http.get(apiUrl + 'users/validate')
         .then(validateCompleted)
         .catch(validateFailed);
 
       function validateCompleted(response) {
-        return response;
+        return response.data;
       }
 
       function validateFailed(err) {
