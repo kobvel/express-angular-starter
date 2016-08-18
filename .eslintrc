@@ -23,6 +23,8 @@
     inject: true,
     angular: true,
     ApplicationConfiguration: true,
+    io: true,
+    $: true,
   },
   "rules": {
     "semi" : [2, "always"],
