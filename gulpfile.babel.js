@@ -133,6 +133,7 @@ gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
     notify: false,
     port: 9000,
     https: true,
+    ghostMode: false,
     server: {
       baseDir: ['.tmp', 'client/web/app', 'client/web'],
       middleware: [
