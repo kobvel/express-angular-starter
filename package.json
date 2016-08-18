@@ -54,6 +54,7 @@
     "passport-jwt": "^2.0.0",
     "q": "^1.4.1",
     "sequelize": "^3.19.2",
+    "socket.io": "^1.4.6",
     "sqlite3": "^3.1.1",
     "winston": "^2.1.1"
   },
