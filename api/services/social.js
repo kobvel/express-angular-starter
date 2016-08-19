@@ -25,54 +25,58 @@ module.exports = app => {
       client_secret: config.FACEBOOK_SECRET,
       redirect_uri: redirectUri,
     };
-    request.get({ url: accessTokenUrl, qs: params, json: true },
-    (errToken, responseToken, accessToken) => {
+    request.get({ url: accessTokenUrl, qs: params, json: true }, getAccessTokenCallback);
+
+    function getAccessTokenCallback(errToken, responseToken, accessToken) {
       if (responseToken.statusCode !== 200) {
         deferred.reject({ message: responseToken.body.error.message });
-      } else {
-        request.get({ url: graphApiUrl, qs: accessToken, json: true },
-        (errAuth, responseAuth, profile) => {
-          if (responseAuth.statusCode !== 200) {
-            deferred.reject({ message: responseAuth.body.error.message });
-          } else {
-            const query = { where: { facebook: profile.id } };
-            Users.findOne(query)
-            .then((existingUser) => {
-              if (existingUser) {
-                const token = createJWT(existingUser);
-                deferred.resolve({
-                  user: {
-                    id: existingUser.dataValues.id,
-                    name: existingUser.name,
-                  },
-                  token,
-                });
-              } else {
-                const user = {};
-                const salt = bcrypt.genSaltSync();
-                user.password = bcrypt.hashSync(salt, salt);
-                user.facebook = profile.id;
-                user.emailValidate = 1;
-                user.email = profile.email;
-                user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
-                user.name = profile.first_name + ' ' + profile.last_name;
-                Users.create(user)
-                .then((data) => {
-                  const token = createJWT(user);
-                  deferred.resolve({
-                    user: {
-                      id: data.dataValues.id,
-                      name: user.name,
-                    },
-                    token,
-                  });
-                });
-              }
-            });
-          }
-        });
+        return null;
       }
-    });
+      request.get({ url: graphApiUrl, qs: accessToken, json: true }, getGraphCallback);
+      return null;
+    }
+
+    function getGraphCallback(errAuth, responseAuth, profile) {
+      if (responseAuth.statusCode !== 200) {
+        deferred.reject({ message: responseAuth.body.error.message });
+        return null;
+      }
+      const query = { where: { facebook: profile.id } };
+      return Users.findOne(query)
+      .then((existingUser) => {
+        if (existingUser) {
+          const token = createJWT(existingUser);
+          deferred.resolve({
+            user: {
+              id: existingUser.dataValues.id,
+              name: existingUser.name,
+            },
+            token,
+          });
+          return null;
+        }
+        const user = {};
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(salt, salt);
+        user.facebook = profile.id;
+        user.emailValidate = 1;
+        user.email = profile.email;
+        user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+        user.name = profile.first_name + ' ' + profile.last_name;
+        return Users.create(user)
+        .then((data) => {
+          const token = createJWT(user);
+          deferred.resolve({
+            user: {
+              id: data.dataValues.id,
+              name: user.name,
+            },
+            token,
+          });
+          return null;
+        });
+      });
+    }
     return deferred.promise;
   };
 
