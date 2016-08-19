@@ -12,9 +12,9 @@
     const data = {
       baseUrlApi: isLocalHost() ? 'https://localhost:3000/api/v1/' : 'https://localhost:3000/api/v1/',
       baseUrl: isLocalHost() ? 'https://localhost:3000' : 'https://localhost:3000',
-      facebookClientId: '',
+      facebookClientId: '374060836051419',
       googleClientId: '',
-      instagramClientId: '',
+      instagramClientId: '9aa71af93aef40e6bf6af9bed03f88d7',
       twitterClientId: '',
     };
 

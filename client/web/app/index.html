@@ -73,6 +73,7 @@
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
 <script src="/bower_components/fastclick/lib/fastclick.js"></script>
+<script src="/bower_components/socket-io-client/socket.io.js"></script>
 <!-- endbuild -->
 
 <!-- build:js /scripts/main.js -->
@@ -82,7 +83,9 @@
 <script src="/app/modules/core/main/angular-run.js"></script>
 
 <script src="/app/modules/core/core.client.module.js"></script>
+<script src="/app/modules/core/services/socket.client.service.js"></script>
 <script src="/app/modules/core/providers/configuration.client.provider.js"></script>
+<script src="/app/modules/core/directives/ng-enter.client.directive.js"></script>
 <script src="/app/modules/core/routes/core.client.routes.js"></script>
 <script src="/app/modules/core/filters/sanitize.client.filter.js"></script>
 <script src="/app/modules/core/filters/groupby.client.filter.js"></script>
@@ -96,17 +99,22 @@
 <script src="/app/modules/core/controllers/head.client.controller.js"></script>
 <script src="/app/modules/core/controllers/modal_alert.client.controller.js"></script>
 <script src="/app/modules/core/controllers/modal_confirm.client.controller.js"></script>
-
+<!-- Task Module -->
 <script src="/app/modules/tasks/tasks.client.module.js"></script>
 <script src="/app/modules/tasks/routes/tasks.client.routes.js"></script>
 <script src="/app/modules/tasks/services/tasks.client.service.js"></script>
 <script src="/app/modules/tasks/controllers/tasks.create.client.controller.js"></script>
 <script src="/app/modules/tasks/controllers/tasks.list.client.controller.js"></script>
-
+<!-- Chat Module -->
+<script src="/app/modules/chat/chat.client.module.js"></script>
+<script src="/app/modules/chat/routes/chat.client.routes.js"></script>
+<script src="/app/modules/chat/controllers/chat.room.client.controller.js"></script>
+<!-- User Module -->
 <script src="/app/modules/users/users.client.module.js"></script>
 <script src="/app/modules/users/routes/users.client.routes.js"></script>
 <script src="/app/modules/users/services/authentication.client.service.js"></script>
 <script src="/app/modules/users/services/authentication.modal.client.service.js"></script>
+<script src="/app/modules/users/config/users.satellizer.client.config.js"></script>
 <script src="/app/modules/users/services/user.client.service.js"></script>
 <script src="/app/modules/users/controllers/login.modal.client.controller.js"></script>
 <script src="/app/modules/users/controllers/recovery.modal.client.controller.js"></script>

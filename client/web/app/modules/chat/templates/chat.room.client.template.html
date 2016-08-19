@@ -1,0 +1,39 @@
+<div class="chat">
+  <!-- messages -->
+  <div class="row">
+    <div class="col-xs-10 col-sm-10 col-md-5 col-lg-5">
+    <label data-ng-show="cc.messages.length == 0"> Envía un mensaje para poder unirte a la conversación</label>
+      <div id="chatDiv" 
+        style=" height: 300px;
+                overflow-x: hidden;
+                overflow-y: scroll;
+                padding: 0 0.5rem 0 0.5rem;
+                margin-right: 0.5rem;"
+      >
+        <div id="realHeight">
+          <!-- message 1 -->
+          <div class="message" data-ng-repeat="message in cc.messages | orderBy: 'created_at' track by $index">
+            <div class="row">
+              <div class="col-md-offset-2 col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                <label>{{message.created_at | date:'MM/dd/yyyy hh:mm'}} -- {{message.user_name}}</label>
+                <p>
+                  {{message.msg}}
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- end message 1 -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- input and send -->
+  <div class="row">
+    <div class="col-md-offset-2 col-xs-10 col-sm-10 col-md-5 col-lg-5">
+      <div class="send-group">
+        <textarea rows="4" data-ng-model="cc.message" placeholder="Escribe tu mensaje" data-ng-enter="cc.sendMessage()"></textarea>
+        <button type="submit" data-ng-click="cc.sendMessage()" class="form-control btn btn-default btn-booper btn-sm pull-right">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
