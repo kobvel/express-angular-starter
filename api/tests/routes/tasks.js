@@ -1,9 +1,11 @@
 import jwt from 'jwt-simple';
 
+import config from './../../config/config';
+import Tasks from './../../models/tasks';
+import Users from './../../models/users';
+
 describe('Routes: Tasks', () => {
-  const Users = app.db.models.Users;
-  const Tasks = app.db.models.Tasks;
-  const jwtSecret = app.config.config.jwtSecret;
+  const jwtSecret = config.jwtSecret;
   let token;
   let fakeTask;
   beforeEach(done => {

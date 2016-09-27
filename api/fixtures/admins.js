@@ -1,32 +1,16 @@
-module.exports = app => {
-  const Users = app.db.models.Users;
+import Users from './../models/users';
 
-  function adminsLoad() {
-    function success(res) {
-      const user = {
-        name: 'Admin',
-        password: 'admin',
-        email: 'admin@admin.com',
-        role: 'admin',
-        emailValidate: 1,
-      };
-      if (res.count === 0) {
-        Users.create(user);
-      }
-      return {};
-    }
-
-    function error(err) {
-      return {};
-    }
-    Users.findAndCount({
-      where: {
-        role: 'admin',
-      },
-    })
-      .then(success)
-      .catch(error);
-  }
-
-  adminsLoad();
+module.exports = () => {
+  return Users.findOrCreate({
+    where: {
+      role: 'admin',
+    },
+    defaults: {
+      name: 'Admin',
+      password: 'admin',
+      email: 'admin@admin.com',
+      role: 'admin',
+      emailValidate: 1,
+    },
+  });
 };

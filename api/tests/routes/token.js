@@ -1,5 +1,6 @@
+import Users from './../../models/users';
+
 describe('Routes: Token', () => {
-  const Users = app.db.models.Users;
   describe('POST /token', () => {
     beforeEach(done => {
       Users

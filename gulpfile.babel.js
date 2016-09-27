@@ -316,6 +316,4 @@ gulp.task('api:docs', [], (done) => {
 
 
 
-gulp.task('default', ['api:serve', 'web:serve'], () => {
-  console.log('start!');
-});
+gulp.task('default', ['api:serve', 'web:serve'], () => {});

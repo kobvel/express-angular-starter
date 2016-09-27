@@ -1,15 +1,9 @@
-import Q from 'q';
+const service = {};
 
-module.exports = app => {
-  const service = {};
-
-  service.getIndexMessage = function () {
-    return Q.Promise((resolve, reject) => {
-      resolve({
-        status: 'mean API',
-      });
-    });
-  };
-
-  return service;
+service.getIndexMessage = function () {
+  return Promise.resolve({
+    status: 'mean API',
+  });
 };
+
+module.exports = service;
