@@ -1,92 +1,68 @@
-// Karma configuration
-// Generated on Wed Mar 25 2015 15:10:29 GMT+0100 (CET)
-
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: 'client/web/',
-
-    baseUrl: './',
-
+    // base path used to resolve all patterns
+    basePath: '',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['mocha', 'chai'],
 
+    // list of files/patterns to load in the browser
+    files: [{ pattern: 'spec.bundle.js', watched: false }],
 
-    // list of files / patterns to load in the browser
-    files: [
-      // libs
-      'bower_components/jquery/dist/jquery.js',
-      'bower_components/lodash/lodash.js',
-      'bower_components/angular/angular.js',
-      'bower_components/angular-mocks/angular-mocks.js',
-      'bower_components/restangular/dist/restangular.js',
-      'bower_components/angular-ui-router/release/angular-ui-router.js',
-      'bower_components/angular-ui-utils/ui-utils.js',
-      'bower_components/angular-bootstrap/ui-bootstrap.js',
-      'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-      'bower_components/ngstorage/ngStorage.js',
-      'bower_components/angular-animate/angular-animate.js',
-      'bower_components/angular-loading-bar/build/loading-bar.js',
-      'bower_components/satellizer/satellizer.js',
-      // app
-      'app/modules/core/main/config.js',
-      'app/modules/core/main/init.js',
-      'app/modules/core/main/angular-config.js',
-      'app/modules/core/main/angular-run.js',
-      'app/modules/core/core.client.module.js',
-      'app/modules/*/*.js',
-      'app/modules/**/*.js',
-      'app/modules/**/tests/unit/*.unit.test.js'
+    // files to exclude
+    exclude: [],
+
+    plugins: [
+      require("karma-chai"),
+      require("karma-chrome-launcher"),
+      require("karma-mocha"),
+      require("karma-mocha-reporter"),
+      require("karma-sourcemap-loader"),
+      require("karma-webpack")
     ],
-
-
-    // list of files to exclude
-    exclude: [
-      'app/modules/**/tests/e2e/*.js'
-    ],
-
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      'app/modules/**/*.js': ['babel']
+    preprocessors: { 'spec.bundle.js': ['webpack', 'sourcemap'] },
+
+    webpack: {
+      devtool: 'inline-source-map',
+      module: {
+        loaders: [
+          { test: /\.js/, exclude: [/app\/lib/, /node_modules/], loader: 'babel' },
+          { test: /\.html/, loader: 'raw' },
+          { test: /\.styl$/, loader: 'style!css!stylus' },
+          { test: /\.css$/, loader: 'style!css' }
+        ]
+      }
     },
 
+    webpackServer: {
+      noInfo: true // prevent console spamming when running in Karma!
+    },
 
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
-
+    reporters: ['mocha'],
 
     // web server port
     port: 9876,
 
-
-    // enable / disable colors in the output (reporters and logs)
+    // enable colors in the output
     colors: true,
-
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
-
-    plugins: ['karma-phantomjs-launcher', 'karma-jasmine', 'karma-babel-preprocessor'],
+    // toggle whether to watch files and rerun tests upon incurring changes
+    autoWatch: false,
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
 
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    // if true, Karma runs tests once and exits
+    singleRun: true
   });
 };

@@ -3,37 +3,32 @@ import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import gulpNodemon from 'gulp-nodemon';
 import apidoc from'gulp-apidoc';
-import browserSync from 'browser-sync';
-import del from 'del';
 import mocha from 'gulp-mocha';
 import {stream as wiredep} from 'wiredep';
 import runSequence from 'run-sequence';
-import modRewrite  from 'connect-modrewrite';
+import modRewrite from 'connect-modrewrite';
 import childProcess from 'child_process';
-import karma from 'karma';
-import gulpProtractor from 'gulp-protractor';
-import traceur from 'gulp-traceur-compiler';
+import webpack from 'webpack';
+import path from 'path';
+import sync from 'run-sequence';
+import rename from 'gulp-rename';
+import template from 'gulp-template';
+import fs from 'fs';
+import yargs from 'yargs';
+import lodash from 'lodash';
+import gutil from 'gulp-util';
+import serve from 'browser-sync';
+import del from 'del';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import colorsSupported from 'supports-color';
+import historyApiFallback from 'connect-history-api-fallback';
 
 const protractor = gulpProtractor.protractor;
 const webdriver_update = gulpProtractor.webdriver_update;
 const webdriver_standalone = gulpProtractor.webdriver_standalone;
 const reload = browserSync.reload;
 const $ = gulpLoadPlugins();
-
-gulp.task('styles', () => {
-  return gulp.src('client/web/app/styles/*.scss')
-    .pipe($.plumber())
-    .pipe($.sourcemaps.init())
-    .pipe($.sass.sync({
-      outputStyle: 'expanded',
-      precision: 10,
-      includePaths: ['.']
-    }).on('error', $.sass.logError))
-    .pipe($.autoprefixer({browsers: ['last 1 version']}))
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('.tmp/styles'))
-    .pipe(reload({stream: true}));
-});
 
 function lint(files, options) {
   return () => {
@@ -45,6 +40,13 @@ function lint(files, options) {
   };
 }
 
+/**
+ *
+ * SERVER
+ *
+ *
+ */
+
 gulp.task('api:lint', lint('api/**/**/*.js'));
 
 //gulp lint has some bugs with the fix option
@@ -53,223 +55,6 @@ gulp.task('api:lint:fix', (done) => {
     done(error || stderr);
   });
 });
-
-gulp.task('web:lint', lint('client/web/app/modules/**/*.js'));
-
-gulp.task('lint', ['api:lint', 'web:lint']);
-
-gulp.task('html', ['styles'], () => {
-  const assets = $.useref.assets({searchPath: ['.tmp', 'app', 'client/web']});
-
-  return gulp.src('client/web/app/*.html')
-    .pipe(assets)
-    .pipe($.if('*.js', traceur()))
-    .pipe($.if('*.js', $.uglify()))
-    .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
-    .pipe(assets.restore())
-    .pipe($.useref())
-    .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
-    .pipe(gulp.dest('client/web/dist'));
-});
-
-gulp.task('angulartemplates', ['styles'], () => {
-  const assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
-
-  return gulp.src('client/web/app/modules/*/**/**/*.html')
-    .pipe(assets)
-    .pipe($.if('*.js', traceur()))
-    .pipe($.if('*.js', $.uglify()))
-    .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
-    .pipe(assets.restore())
-    .pipe($.useref())
-    .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
-    .pipe(gulp.dest('client/web/dist/modules'));
-});
-
-gulp.task('sprite', () =>  {
-  return gulp.src('client/web/app/images/sprites/*.png').pipe($.spritesmith({
-    imgName: 'client/web/app/images/sprite.png',
-    cssName: 'client/web/app/styles/_sprite.scss'
-  })).pipe(gulp.dest('./'));
-});
-
-gulp.task('images', () => {
-  return gulp.src('client/web/app/images/**/*')
-    .pipe($.if($.if.isFile, $.cache($.imagemin({
-      progressive: true,
-      interlaced: true,
-      // don't remove IDs from SVGs, they are often used
-      // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
-    }))
-    .on('error', function (err) {
-      console.log(err);
-      this.end();
-    })))
-    .pipe(gulp.dest('client/web/dist/images'));
-});
-
-gulp.task('fonts', () => {
-  return gulp.src(require('main-bower-files')({
-    filter: '**/*.{eot,svg,ttf,woff,woff2}'
-  }).concat('client/web/app/fonts/**/*'))
-    .pipe(gulp.dest('.tmp/fonts'))
-    .pipe(gulp.dest('client/web/dist/fonts'));
-});
-
-gulp.task('extras', () => {
-  return gulp.src([
-    'client/web/app/*.*',
-    '!client/web/app/*.html'
-  ], {
-    dot: true
-  }).pipe(gulp.dest('client/web/dist'));
-});
-
-gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
-
-gulp.task('web:serve', ['web:lint', 'styles', 'fonts'], () => {
-  browserSync({
-    notify: false,
-    port: 9000,
-    https: true,
-    ghostMode: false,
-    server: {
-      baseDir: ['.tmp', 'client/web/app', 'client/web'],
-      middleware: [
-          modRewrite([
-              '^[^\\.]*$ /index.html [L]'
-          ])
-      ],
-      routes: {
-        '/bower_components': 'client/web/bower_components'
-      }
-    }
-  });
-
-  gulp.watch([
-    'client/web/app/*.html',
-    'client/web/app/scripts/**/*.js',
-    'client/web/app/images/**/*',
-    'client/web/app/modules/**/*.js',
-    'client/web/app/modules/**/*.html',
-    '.tmp/fonts/**/*'
-  ]).on('change', () => gulp.start('web:lint'), reload);
-
-  gulp.watch('client/web/app/styles/**/*.scss', ['styles']);
-  gulp.watch('client/web/app/fonts/**/*', ['fonts']);
-  gulp.watch('bower.json', ['wiredep', 'fonts']);
-});
-
-
-gulp.task('web:serve:dist', () => {
-  browserSync({
-    notify: false,
-    port: 9000,
-    https: true,
-    server: {
-      middleware: [
-          modRewrite([
-              '!\\.\\w+$ /index.html [L]'
-          ])
-      ],
-      baseDir: ['client/web/dist']
-    }
-  });
-});
-
-gulp.task('web:serve:test', () => {
-  browserSync({
-    notify: false,
-    port: 9000,
-    ui: false,
-    https: true,
-    server: {
-      baseDir: 'client/web/test',
-      middleware: [
-          modRewrite([
-              '!\\.\\w+$ /index.html [L]'
-          ])
-      ],
-      routes: {
-        '/bower_components': 'client/web/bower_components'
-      }
-    }
-  });
-
-  gulp.watch('client/web/test/spec/**/*.js').on('change', reload);
-  gulp.watch('client/web/test/spec/**/*.js', ['lint:test']);
-});
-
-// Run karma tests
-gulp.task('web:test:karma', (done) => {
-  new karma.Server({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done).start();
-});
-
-gulp.task('web:test:e2e', (done) => {
-  runSequence('env:test', 'protractor', done);
-});
-
-gulp.task('env:test', () => {
-  //process.env.NODE_ENV = 'test';
-});
-
-// Protractor test runner task
-gulp.task('protractor', ['webdriver_update'], () => {
-  gulp.src([])
-    .pipe(protractor({
-      configFile: __dirname + '/protractor.conf.js'
-    }))
-    .on('end', () => {
-      console.log('E2E Testing complete');
-      // exit with success.
-      process.exit(0);
-    })
-    .on('error', (err) => {
-      console.log('E2E Tests failed');
-      process.exit(1);
-    });
-});
-
-// Downloads the selenium webdriver
-gulp.task('webdriver_update', webdriver_update);
-
-
-// Start the standalone selenium server
-// NOTE: This is not needed if you reference the
-// seleniumServerJar in your protractor.conf.js
-gulp.task('webdriver_standalone', webdriver_standalone);
-
-// inject bower components
-gulp.task('wiredep', () => {
-  gulp.src('client/web/app/styles/*.scss')
-    .pipe(wiredep({
-      ignorePath: /^(\.\.\/)+/
-    }))
-    .pipe(gulp.dest('client/web/app/styles'));
-
-  gulp.src('client/web/app/*.html')
-    .pipe(wiredep({
-      exclude: ['bootstrap-sass'],
-      ignorePath: /^(\.\.\/)*\.\./
-    }))
-    .pipe(gulp.dest('client/web/app'));
-});
-
-gulp.task('build', ['web:lint', 'angulartemplates', 'html', 'images', 'fonts', 'extras'], () => {
-  return gulp.src('client/web/dist/**/*').pipe($.size({title: 'build', gzip: true}));
-});
-
-
-/**
- *
- * API
- *
- *
- */
 
 gulp.task('api:serve', ['api:lint'],() => {
   gulpNodemon({
@@ -314,6 +99,122 @@ gulp.task('api:docs', [], (done) => {
 });
 
 
+
+
+/**
+ *
+ * CLIENT
+ *
+ *
+ */
+
+const rootClient = 'client';
+
+// helper method for resolving paths
+const resolveToApp = (glob = '') => {
+  return path.join(rootClient, 'app', glob); // app/{glob}
+};
+
+const resolveToComponents = (glob = '') => {
+  return path.join(rootClient, 'app/components', glob); // app/components/{glob}
+};
+
+// map of all paths
+const paths = {
+  js: resolveToComponents('**/*!(.spec.js).js'), // exclude spec files
+  styl: resolveToApp('**/*.styl'), // stylesheets
+  html: [
+    resolveToApp('**/*.html'),
+    path.join(rootClient, 'index.html')
+  ],
+  entry: [
+    'babel-polyfill',
+    path.join(__dirname, rootClient, 'app/app.js')
+  ],
+  output: rootClient,
+  blankTemplates: path.join(__dirname, 'generator', 'component/**/*.**'),
+  dest: path.join(__dirname, 'dist')
+};
+
+// use webpack.config.js to build modules
+gulp.task('webpack', ['clean'], (cb) => {
+  const config = require('./webpack.dist.config');
+  config.entry.app = paths.entry;
+
+  webpack(config, (err, stats) => {
+    if(err)  {
+      throw new gutil.PluginError("webpack", err);
+    }
+
+    gutil.log("[webpack]", stats.toString({
+      colors: colorsSupported,
+      chunks: false,
+      errorDetails: true
+    }));
+
+    cb();
+  });
+});
+
+gulp.task('web:lint', lint(paths.js));
+
+gulp.task('web:serve', () => {
+  const config = require('./webpack.dev.config');
+  config.entry.app = [
+    // this modules required to make HRM working
+    // it responsible for all this webpack magic
+    'webpack-hot-middleware/client?reload=true',
+    // application entry point
+  ].concat(paths.entry);
+
+  var compiler = webpack(config);
+
+  serve({
+    port: process.env.PORT || 9000,
+    open: false,
+    server: {baseDir: rootClient},
+    middleware: [
+      historyApiFallback(),
+      webpackDevMiddleware(compiler, {
+        stats: {
+          colors: colorsSupported,
+          chunks: false,
+          modules: false
+        },
+        publicPath: config.output.publicPath
+      }),
+      webpackHotMiddleware(compiler)
+    ]
+  });
+});
+
+gulp.task('watch', ['serve']);
+
+gulp.task('component', () => {
+  const cap = (val) => {
+    return val.charAt(0).toUpperCase() + val.slice(1);
+  };
+  const name = yargs.argv.name;
+  const parentPath = yargs.argv.parent || '';
+  const destPath = path.join(resolveToComponents(), parentPath, name);
+
+  return gulp.src(paths.blankTemplates)
+    .pipe(template({
+      name: name,
+      upCaseName: cap(name)
+    }))
+    .pipe(rename((path) => {
+      path.basename = path.basename.replace('temp', name);
+    }))
+    .pipe(gulp.dest(destPath));
+});
+
+gulp.task('clean', (cb) => {
+  del([paths.dest]).then(function (paths) {
+    gutil.log("[clean]", paths);
+    cb();
+  })
+});
 
 
 gulp.task('default', ['api:serve', 'web:serve'], () => {});

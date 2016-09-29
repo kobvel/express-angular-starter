@@ -1,0 +1,28 @@
+{
+  "name": "restangular",
+  "main": "./dist/restangular.js",
+  "description": "Restful Resources service for AngularJS apps",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mgonto/restangular.git"
+  },
+  "dependencies": {
+    "lodash": "~3.x",
+    "angular": "~1.x"
+  },
+  "ignore": [
+    "node_modules",
+    "components",
+    "lib"
+  ],
+  "homepage": "https://github.com/sssilver/restangular",
+  "_release": "fcb7fc79e1",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "fcb7fc79e1cb950c368195770ce68afa5e8eb5be"
+  },
+  "_source": "https://github.com/sssilver/restangular.git",
+  "_target": "master",
+  "_originalSource": "https://github.com/sssilver/restangular.git"
+}
