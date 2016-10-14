@@ -201,10 +201,18 @@ gulp.task('build', ['optimize-babel-js', 'images', 'fonts'], function () {
 
 gulp.task('optimize-babel-js', ['optimize'], () => {
   const dir = config.build + '/js/';
+
+  const jsFilter = $.filter('**/app*.js');
+
   return gulp.src(dir + 'app**.js')
     .pipe(sourcemaps.init())
     .pipe($.babel())
     .pipe($.sourcemaps.write('.'))
+    .pipe(jsFilter)
+    .pipe($.uglify({
+      mangle: false,
+    }))
+    .pipe(jsFilter.restore())
     .pipe(gulp.dest(dir));
 });
 

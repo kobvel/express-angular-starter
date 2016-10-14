@@ -19,8 +19,8 @@
     function activate() {
       taskservice.getTasks()
         .then((tasks) => {
-        vm.tasks = tasks;
-      });
+          vm.tasks = tasks;
+        });
     }
 
     function showModal() {
@@ -44,7 +44,6 @@
       function success() {
         logger.success('Task created');
       }
-
     }
   }
 }());
