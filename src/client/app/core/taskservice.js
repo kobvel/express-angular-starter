@@ -10,6 +10,7 @@
   function taskservice($http, $q, exception, logger) {
     const service = {
       createTask,
+      updateTask,
       getTasks,
       getPaginated,
       getMessageCount,
@@ -33,8 +34,14 @@
       }
     }
 
-    function getPaginated() {
-      return $http.get('/api/v1/tasks/paginated')
+    function getPaginated(query) {
+      const params = {};
+
+      if (query) {
+        params.params = query;
+      }
+
+      return $http.get('/api/v1/tasks/paginated', params)
         .then(success)
         .catch(fail);
 
@@ -58,6 +65,20 @@
 
       function fail(e) {
         return exception.catcher('XHR Failed for createTask')(e);
+      }
+    }
+
+    function updateTask(taskId, task) {
+      return $http.put('/api/v1/tasks/' + taskId, task)
+        .then(success)
+        .catch(fail);
+
+      function success(response) {
+        return response.data;
+      }
+
+      function fail(e) {
+        return exception.catcher('XHR Failed for updateTask')(e);
       }
     }
   }

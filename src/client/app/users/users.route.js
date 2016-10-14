@@ -22,7 +22,7 @@
           controllerAs: 'uc',
           title: 'Users',
           settings: {
-            nav: 0,
+            nav: 1,
             content: 'Users',
             roles: ['admin'],
           },

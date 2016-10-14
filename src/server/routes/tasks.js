@@ -1,4 +1,5 @@
 import express from 'express';
+import errors from './../error';
 import acl from './../config/acl';
 import tasksService from './../services/tasks';
 
@@ -72,7 +73,7 @@ router
   tasksService.getAll(req.user)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -81,7 +82,7 @@ router
   tasksService.getPaginated(req.user, req.query)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -119,7 +120,7 @@ router
   req.body.user_id = req.user.id;
   tasksService.create(req.body)
     .then(result => res.json(result))
-    .catch(error => res.status(412).json({ msg: error.message }));
+    .catch(error => res.status(412).json(errors.get(error)));
 });
 
 
@@ -161,7 +162,7 @@ router
         res.sendStatus(404);
       }
     })
-    .catch(error => res.status(412).json({ msg: error.message }));
+    .catch(error => res.status(412).json(errors.get(error)));
 });
 
 
@@ -188,7 +189,7 @@ router
 .put('/api/v1/tasks/:taskId', acl.checkRoles, (req, res) => {
   tasksService.update(req.params.taskId, req.body, req.user)
     .then(result => res.sendStatus(204))
-    .catch(error => res.status(412).json({ msg: error.message }));
+    .catch(error => res.status(412).json(errors.get(error)));
 });
 
 
@@ -208,7 +209,7 @@ router
 .delete('/api/v1/tasks/:taskId', acl.checkRoles, (req, res) => {
   tasksService.destroy(req.params.taskId, req.user)
     .then(result => res.sendStatus(204))
-    .catch(error => res.status(412).json({ msg: error.message }));
+    .catch(error => res.status(412).json(errors.get(error)));
 });
 
 export default router;

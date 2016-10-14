@@ -1,5 +1,5 @@
-
 import express from 'express';
+import errors from './../error';
 import acl from './../config/acl';
 
 import socialService from './../services/social';
@@ -60,7 +60,7 @@ router.get('/api/v1/users', acl.checkRoles, (req, res) => {
   usersService.getAll()
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -88,7 +88,7 @@ router.get('/api/v1/users/me', acl.checkRoles, (req, res) => {
   usersService.findById(req.user.id)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -107,7 +107,7 @@ router.delete('/api/v1/users/me', acl.checkRoles, (req, res) => {
   usersService.destroy(req.user.id)
     .then(result => res.sendStatus(204))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -126,7 +126,7 @@ router.delete('/api/v1/users/:userId', acl.checkRoles, (req, res) => {
   usersService.destroy(req.params.userId)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -168,7 +168,7 @@ router.post('/api/v1/users', acl.checkRoles, (req, res) => {
       res.json(result);
     })
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -200,7 +200,7 @@ router.put('/api/v1/users/me', acl.checkRoles, (req, res) => {
   usersService.update(req.user.id, req.body)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -208,7 +208,7 @@ router.put('/api/v1/users/:userId', acl.checkRoles, (req, res) => {
   usersService.update(req.params.userId, req.body)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -224,7 +224,7 @@ router.get('/api/v1/users/validate/:token', acl.checkRoles, (req, res) => {
   router.services.users.validateEmail(req.params.token)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -248,7 +248,7 @@ router.post('/api/v1/users/forgot', acl.checkRoles, (req, res) => {
       res.json(result);
     })
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -269,7 +269,7 @@ router.get('/api/v1/users/reset/validate/:token', acl.checkRoles, (req, res) => 
   usersService.validateReset(req.params.token)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -299,7 +299,7 @@ router.post('/api/v1/users/reset/password/:token', acl.checkRoles, (req, res) =>
   usersService.resetPassword(req.params.token, req.body.newPassword)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -331,7 +331,7 @@ router.post('/api/v1/auth/facebook', acl.checkRoles, (req, res) => {
   req.body.redirectUri)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -362,7 +362,7 @@ router.post('/api/v1/auth/twitter', acl.checkRoles, (req, res) => {
   socialService.twitter(req.body)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -394,7 +394,7 @@ router.post('/api/v1/auth/instagram', acl.checkRoles, (req, res) => {
   req.body.redirectUri)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -426,7 +426,7 @@ router.post('/api/v1/auth/google', acl.checkRoles, (req, res) => {
   req.body.redirectUri)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 
@@ -458,7 +458,7 @@ router.post('/api/v1/auth/pinterest', acl.checkRoles, (req, res) => {
   req.body.redirectUri)
     .then(result => res.json(result))
     .catch(error => {
-      res.status(412).json({ msg: error.message });
+      res.status(412).json(errors.get(error));
     });
 });
 

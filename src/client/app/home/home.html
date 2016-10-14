@@ -20,9 +20,18 @@
         <tr data-ng-repeat="task in hc.tasks">
           <td>{{task.id}}</td>
           <td>{{task.title}}</td>
-          <td>{{task.done}}</td>
+          <td data-ng-bind-html="task.done | boolFilter"></td>
+          <!-- <td>
+            <div class="btn-group">
+              <label class="btn btn-success" ng-model="task.done" uib-btn-radio="true">Done</label>
+              <label class="btn btn-danger" ng-model="task.done" uib-btn-radio="false">Not Done</label>
+            </div>
+          </td> -->
           <td>{{task.created_at | date: "MM/dd/yyyy 'at' h:mma"}}</td>
-          <td><button class="btn btn-success btn-xs">Mark as Done</button></td>
+          <td>
+            <button class="btn btn-success btn-xs" data-ng-click="hc.showEditTaskModal(task)">Edit</button>
+            <button class="btn btn-danger btn-xs">Remove</button>
+          </td>
         </tr>
       </tbody>
     </table>
