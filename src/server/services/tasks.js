@@ -8,6 +8,13 @@ service.getAll = (user) => {
   });
 };
 
+service.getPaginated = (user, params) => {
+  const query = {};
+  query.where = { user_id: user.id };
+  buildPagination(params, query);
+  return Tasks.findAndCountAll(query);
+};
+
 service.create = (task) => {
   return Tasks.create(task);
 };
@@ -41,5 +48,18 @@ service.destroy = (id, user) => {
 
   return Tasks.destroy(query);
 };
+
+function buildPagination(params, query) {
+  query.limit = 10;
+  query.offset = 0;
+
+  if (params.offset) {
+    query.offset = parseInt(params.offset, 10) * parseInt(params.limit, 10);
+  }
+
+  if (params.limit) {
+    query.limit = parseInt(params.limit, 10);
+  }
+}
 
 module.exports = service;

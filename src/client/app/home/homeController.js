@@ -5,13 +5,13 @@
     .module('app.home')
     .controller('HomeController', HomeController);
 
-  HomeController.$inject = ['$state', '$uibModal', 'logger', 'authentication', 'taskservice'];
+  HomeController.$inject = ['$uibModal', 'logger', 'authentication', 'taskservice'];
   /* @ngInject */
-  function HomeController($state, $uibModal, logger, authentication, taskservice) {
+  function HomeController($uibModal, logger, authentication, taskservice) {
     const vm = this;
     vm.user = authentication.user;
     vm.title = 'Home';
-    vm.showModal = showModal;
+
     activate();
 
     function activate() {}

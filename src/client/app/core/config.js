@@ -21,8 +21,8 @@
   }
 
   const config = {
-    appErrorPrefix: '[PROLUXE Quality Control Error] ',
-    appTitle: 'PROLUXE Quality Control',
+    appErrorPrefix: '[Mean Relational Error]',
+    appTitle: 'Mean Relational',
   };
 
   core.value('config', config);

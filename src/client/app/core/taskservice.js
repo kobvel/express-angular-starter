@@ -11,6 +11,7 @@
     const service = {
       createTask,
       getTasks,
+      getPaginated,
       getMessageCount,
     };
 
@@ -29,6 +30,20 @@
 
       function fail(e) {
         return exception.catcher('XHR Failed for getTasks')(e);
+      }
+    }
+
+    function getPaginated() {
+      return $http.get('/api/v1/tasks/paginated')
+        .then(success)
+        .catch(fail);
+
+      function success(response) {
+        return response.data;
+      }
+
+      function fail(e) {
+        return exception.catcher('XHR Failed for getPaginated')(e);
       }
     }
 
