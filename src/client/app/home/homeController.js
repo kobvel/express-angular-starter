@@ -11,16 +11,23 @@
     const vm = this;
     vm.user = authentication.user;
     vm.title = 'Home';
+    vm.tasks = [];
+    vm.showModal = showModal;
 
     activate();
 
-    function activate() {}
+    function activate() {
+      taskservice.getTasks()
+        .then((tasks) => {
+        vm.tasks = tasks;
+      });
+    }
 
     function showModal() {
       const modalInstance = $uibModal.open({
         templateUrl: 'app/home/createTaskModal.html',
-        controller: 'createTagModalController',
-        controllerAs: 'tnmc',
+        controller: 'createTaskModalController',
+        controllerAs: 'ctmc',
         resolve: {
           taskservice: () => {
             return taskservice;

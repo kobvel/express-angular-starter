@@ -2,4 +2,29 @@
   <div class="row">
     <h3>Hi, {{hc.user.name}}</h3>
   </div>
+  <div class="pull-right">
+    <button class="btn btn-success" data-ng-click="hc.showModal()">New Task</button>
+  </div>
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="task in hc.tasks">
+          <td>{{task.id}}</td>
+          <td>{{task.title}}</td>
+          <td>{{task.done}}</td>
+          <td>{{task.created_at | date: "MM/dd/yyyy 'at' h:mma"}}</td>
+          <td><button class="btn btn-success btn-xs">Mark as Done</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </section>

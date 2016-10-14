@@ -5,11 +5,11 @@
     .module('app.home')
     .controller('createTaskModalController', createTaskModalController);
 
-  createTaskModalController.$inject = ['$uibModalInstance', 'taskservice', 'logger'];
+  createTaskModalController.$inject = ['$uibModalInstance', 'logger', 'taskservice'];
   /* @ngInject */
-  function createTaskModalController($uibModalInstance, taskservice, logger) {
+  function createTaskModalController($uibModalInstance, logger, taskservice) {
     const vm = this;
-    vm.find = find;
+    vm.createTask = createTask;
     vm.cancel = cancel;
     vm.task = {};
     activate();
