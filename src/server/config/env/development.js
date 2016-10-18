@@ -2,8 +2,8 @@ import logger from '../logger.js';
 
 module.exports = {
   database: 'mean_relational',
-  username: 'andres',
-  password: '5',
+  username: 'postgres',
+  password: 'postgres',
   params: {
     dialect: 'postgres',
     protocol: 'postgres',
