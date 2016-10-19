@@ -9,6 +9,6 @@ logs/
 
 *.sqlite
 server-coverage
-.coverrun 
+.coverrun
 mean_relational_test.sqlite
 .coverdata
