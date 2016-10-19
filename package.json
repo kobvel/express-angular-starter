@@ -41,8 +41,6 @@
   "author": "Facundo Munoz",
   "dependencies": {
     "acl": "^0.4.9",
-<<<<<<< HEAD
-=======
     "bcrypt": "^0.8.5",
     "body-parser": "^1.15.0",
     "compression": "^1.6.1",
@@ -62,7 +60,6 @@
     "socket.io": "^1.4.6",
     "sqlite3": "^3.1.1",
     "winston": "^2.1.1",
->>>>>>> bee0583... Add travis.yml file for continous integration
     "apidoc": "^0.15.1",
     "babel-cli": "^6.5.1",
     "babel-core": "^6.7.7",
@@ -168,6 +165,7 @@
     "pg": "^6.1.0",
     "phantomjs-prebuilt": "^2.1.4",
     "plato": "^1.2.0",
+    "q": "^1.0.1",
     "run-sequence": "^1.1.5",
     "sequelize": "^3.19.2",
     "sinon": "^1.12.2",
@@ -192,7 +190,6 @@
     }
   },
   "devDependencies": {
-    "gulp-coverage": "^0.3.38",
     "gulp-coveralls": "^0.1.4",
     "gulp-istanbul": "^1.1.1",
     "isparta": "^4.0.0"

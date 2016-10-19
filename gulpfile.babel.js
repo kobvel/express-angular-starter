@@ -317,7 +317,6 @@ gulp.task('clean-code', function (done) {
 
 /**
  * Upload server side test coverage report to coveralls
- * ['server-tests'] is a dependency to the task
  */
 gulp.task('coveralls', () => {
   if (!process.env.CI) {
