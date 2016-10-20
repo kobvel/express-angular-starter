@@ -8,10 +8,8 @@ describe('core', function () {
     beforeEach(function () {
       module('app.core', bard.fakeToastr);
       bard.inject('$location', '$rootScope', '$state', '$templateCache');
-      $templateCache.put(views.core, '');
+      $templateCache.put(views.four0four, '');
     });
-
-    bard.verifyNoOutstandingHttpRequests();
 
     it('should map /404 route to 404 View template', function () {
       expect($state.get('404').templateUrl).to.equal(views.four0four);
