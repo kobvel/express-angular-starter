@@ -18,7 +18,7 @@ describe('core', function () {
     });
 
     it('of dashboard should work with $state.go', function () {
-      $state.go('404');
+      $location.path('/404');
       $rootScope.$apply();
       expect($state.is('404'));
     });
