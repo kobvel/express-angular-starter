@@ -1,6 +1,4 @@
 (function () {
-  'use strict';
-
   angular
     .module('app.core')
     .factory('authentication', authentication);

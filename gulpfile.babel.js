@@ -9,11 +9,15 @@ import istanbul from 'gulp-istanbul';
 import coveralls from 'gulp-coveralls';
 import runSequence from 'run-sequence';
 import merger from 'lcov-result-merger';
+import useref from 'gulp-useref';
 
 const isparta = require('isparta');
 const args = require('yargs').argv;
 const config = require('./gulp.config')();
-const $ = require('gulp-load-plugins')({ lazy: true });
+const $ = require('gulp-load-plugins')({
+  lazy: true,
+});
+
 const port = process.env.PORT || config.defaultPort;
 
 /**
@@ -32,6 +36,18 @@ const port = process.env.PORT || config.defaultPort;
  */
 gulp.task('help', $.taskListing);
 gulp.task('default', ['help']);
+
+/**
+ * vet the code and create coverage report
+ * @return {Stream}
+ */
+gulp.task('vet:fix', () => {
+  log('Analyzing source with eslint');
+  return gulp
+    .src(config.alljs)
+    .pipe($.eslint({ fix: true }))
+    .pipe($.eslint.format());
+});
 
 /**
  * vet the code and create coverage report
@@ -207,7 +223,7 @@ gulp.task('build', ['optimize-babel-js', 'images', 'fonts'], () => {
 gulp.task('optimize-babel-js', ['optimize'], () => {
   const dir = config.build + '/js/';
 
-  const jsFilter = $.filter('**/app*.js');
+  const jsFilter = $.filter('**/app*.js', { restore: true });
 
   return gulp.src(dir + 'app**.js')
     .pipe(sourcemaps.init())
@@ -217,7 +233,7 @@ gulp.task('optimize-babel-js', ['optimize'], () => {
     .pipe($.uglify({
       mangle: false,
     }))
-    .pipe(jsFilter.restore())
+    .pipe(jsFilter.restore)
     .pipe(gulp.dest(dir));
 });
 
@@ -229,11 +245,11 @@ gulp.task('optimize-babel-js', ['optimize'], () => {
 gulp.task('optimize', ['inject'], () => {
   log('Optimizing the js, css, and html');
 
-  const assets = $.useref.assets({ searchPath: './' });
+  const assets = useref.assets({ searchPath: './' });
   // Filters are named for the gulp-useref path
-  const cssFilter = $.filter('**/*.css');
-  const jsAppFilter = $.filter('**/' + config.optimized.app);
-  const jslibFilter = $.filter('**/' + config.optimized.lib);
+  const cssFilter = $.filter('**/*.css', { restore: true });
+  const jsAppFilter = $.filter('**/' + config.optimized.app, { restore: true });
+  const jslibFilter = $.filter('**/' + config.optimized.lib, { restore: true });
 
   const templateCache = config.temp + config.templateCache.file;
 
@@ -245,22 +261,22 @@ gulp.task('optimize', ['inject'], () => {
     // Get the css
     .pipe(cssFilter)
     .pipe($.minifyCss())
-    .pipe(cssFilter.restore())
+    .pipe(cssFilter.restore)
     // Get the custom javascript
     .pipe(jsAppFilter)
     .pipe($.ngAnnotate({ add: true }))
     .pipe($.uglify())
     .pipe(getHeader())
-    .pipe(jsAppFilter.restore())
+    .pipe(jsAppFilter.restore)
     // Get the vendor javascript
     .pipe(jslibFilter)
     .pipe($.uglify()) // another option is to override wiredep to use min files
-    .pipe(jslibFilter.restore())
+    .pipe(jslibFilter.restore)
     // Take inventory of the file names for future rev numbers
     .pipe($.rev())
     // Apply the concat and file replacement with useref
     .pipe(assets.restore())
-    .pipe($.useref())
+    .pipe(useref())
     // Replace the file names in the html with rev numbers
     .pipe($.revReplace())
     .pipe(gulp.dest(config.build));
@@ -471,7 +487,7 @@ gulp.task('bump', () => {
 function runClientTests(singleRun, done) {
   const Karma = require('karma').Server;
   new Karma({
-    configFile: __dirname + '/karma.conf.js',
+    configFile: path.join(__dirname, '/karma.conf.js'),
     singleRun: !!singleRun,
   }, done).start();
 }
@@ -495,14 +511,12 @@ function clientCoverageReport(singleRun, done) {
     savedEnv.NODE_ENV = 'dev';
     savedEnv.PORT = 8888;
     child = fork(config.nodeServer);
-  } else {
-    if (serverSpecs && serverSpecs.length) {
-      excludeFiles = serverSpecs;
-    }
+  } else if (serverSpecs && serverSpecs.length) {
+    excludeFiles = serverSpecs;
   }
 
   new Karma({
-    configFile: __dirname + '/karma.conf.js',
+    configFile: path.join(__dirname, '/karma.conf.js'),
     exclude: excludeFiles,
     singleRun: !!singleRun,
     reporters: ['progress', 'coverage'],
@@ -539,7 +553,9 @@ function clientCoverageReport(singleRun, done) {
  */
 function clean(cleanPath, done) {
   log('Cleaning: ' + $.util.colors.blue(cleanPath));
-  del(cleanPath, done);
+  del(cleanPath).then((res) => {
+    done();
+  });
 }
 
 /**
@@ -550,7 +566,7 @@ function clean(cleanPath, done) {
  * @returns {Stream}   The stream
  */
 function inject(src, label, order) {
-  const options = { read: false };
+  const options = {};
   if (label) {
     options.name = 'inject:' + label;
   }

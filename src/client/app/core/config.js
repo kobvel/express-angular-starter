@@ -1,6 +1,4 @@
 (function () {
-  'use strict';
-
   const core = angular.module('app.core');
 
   core.config(toastrConfig);

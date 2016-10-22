@@ -1,7 +1,5 @@
 /* Help configure the state-base ui.router */
 (function () {
-  'use strict';
-
   angular
     .module('blocks.router')
     .provider('routerHelper', routerHelperProvider);
@@ -94,7 +92,7 @@
             if (handlingStateChangeError) {
               return;
             }
-            stateCounts.errors++;
+            stateCounts.errors += 1;
             handlingStateChangeError = true;
             const destination = (toState &&
               (toState.title || toState.name || toState.loadedTemplateUrl)) ||
@@ -119,7 +117,7 @@
       function updateDocTitle() {
         $rootScope.$on('$stateChangeSuccess',
           function (event, toState, toParams, fromState, fromParams) {
-            stateCounts.changes++;
+            stateCounts.changes += 1;
             handlingStateChangeError = false;
             const title = config.docTitle + ' ' + (toState.title || '');
             $rootScope.title = title; // data bind to <title>

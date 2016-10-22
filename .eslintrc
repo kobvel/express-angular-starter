@@ -25,6 +25,7 @@
     ApplicationConfiguration: true,
     io: true,
     $: true,
+    window: true,
   },
   "rules": {
     "prefer-arrow-callback": 0,
@@ -41,6 +42,11 @@
     "no-empty-label": 0,
     "no-labels": 2,
     "no-unused-vars": [2, { "args": "none" }],
-    "no-use-before-define": [2, { "functions": false, "classes": true }]
+    "no-use-before-define": [2, { "functions": false, "classes": true }],
+    "arrow-parens": 0,
+    "import/extensions": 0,
+    "global-require": 0,
+    "no-restricted-syntax": 0,
+    "no-prototype-builtins": 0,
   }
 }

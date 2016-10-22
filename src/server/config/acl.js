@@ -16,15 +16,13 @@ acl.checkRoles = (req, res, next) => {
         res.status(500).json({
           msg: 'Unexpected authorization error',
         });
+      } else if (isAllowed) {
+        // Access granted! Invoke next middleware
+        next();
       } else {
-        if (isAllowed) {
-          // Access granted! Invoke next middleware
-          next();
-        } else {
-          res.status(403).json({
-            msg: 'User is not authorized',
-          });
-        }
+        res.status(403).json({
+          msg: 'User is not authorized',
+        });
       }
     });
 };

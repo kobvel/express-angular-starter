@@ -19,8 +19,10 @@ function sendEmail(mailOptions) {
 }
 
 service.sendValidateEmail = (email, token) => {
-  const content = 'Please enter <a href=\"' + config.urlBaseClient + '/user/validate/' + token +
-  '\"> here </a>';
+  const content = `
+    Please enter 
+    <a href="${config.urlBaseClient}/user/validate/${token}"> here </a>
+  `;
   const subject = 'Validate Email';
   const mailOptions = {
     to: email,
@@ -31,8 +33,11 @@ service.sendValidateEmail = (email, token) => {
 };
 
 service.sendRecoveryEmail = (email, token) => {
-  const content = 'Please enter <a href=\"' + config.urlBaseClient + '/user/recovery/' + token +
-  '\"> here </a> to change your password.';
+  const content = `
+    Please enter 
+    <a href="${config.urlBaseClient}/user/recovery/${token}"> here </a> 
+    to change your password.
+  `;
   const subject = 'Recovery Password';
   const mailOptions = {
     to: email,

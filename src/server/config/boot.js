@@ -1,3 +1,5 @@
+/* eslint import/no-dynamic-require: 0 */
+
 import fs from 'fs';
 import path from 'path';
 
